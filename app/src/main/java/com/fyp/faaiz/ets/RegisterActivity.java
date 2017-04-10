@@ -3,6 +3,8 @@ package com.fyp.faaiz.ets;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +49,47 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     Button signup;
     Session _session;
 
+    private String email_filter_exp = "~#^|$%&*!+,':\";{}[]\\/()<?>";
+    private String name_exp = "._-123456890@ ";
+    private String phone_exp = "~#^|$%&*!,'.-_:\";{}[]\\/()<?> ";
+
+
+    private InputFilter email_filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && email_filter_exp.contains(("" + source))) {
+                return "";
+            }
+            return null;
+        }
+    };
+
+    private InputFilter phone_filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && phone_exp.contains(("" + source))) {
+                return "";
+            }
+            return null;
+        }
+    };
+
+    private InputFilter name_filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && name_exp.contains(("" + source))) {
+                return "";
+            }
+            return null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +97,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         auth();
         init();
+        email.setFilters(new InputFilter[] { email_filter });
+        first_name.setFilters(new InputFilter[] { email_filter, name_filter});
+        last_name.setFilters(new InputFilter[] { email_filter, name_filter});
+        phone.setFilters(new InputFilter[] { phone_filter });
         events();
     }
 

@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -48,13 +52,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button sigin_button;
     Session _session;
 
+    private String email_filter = "~#^|$%&*!+,':\";{}[]\\/()<?>";
+
+    private InputFilter filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && email_filter.contains(("" + source))) {
+                return "";
+            }
+            return null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // checking login
         auth();
         init();
+        login_email.setFilters(new InputFilter[] { filter });
         events();
     }
 
