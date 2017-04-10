@@ -94,8 +94,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete:
-                Toast.makeText(this, "Hello World", Toast.LENGTH_SHORT).show();
+            case R.id.logout:
+                if (_session.isUserLoggedIn()) {
+                    _session.logoutUser();
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

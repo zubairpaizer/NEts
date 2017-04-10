@@ -34,6 +34,8 @@ public class EmployeesTabsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private View _rootView;
+
     private OnFragmentInteractionListener mListener;
 
     public EmployeesTabsFragment() {
@@ -72,6 +74,31 @@ public class EmployeesTabsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.employee_tab_fragment, container, false);
+
+
+        //_rootView = inflater.inflate(R.layout.employee_list, container, false);
+
+/*        _listView = (ListView) _rootView.findViewById(R.id.employee_list);
+
+        _swipeRefreshLayout = (SwipeRefreshLayout) _rootView.findViewById(R.id.swipe_refresh_layout);
+
+        _arrayList = new ArrayList<>();
+
+        _adapter = new EmployeeActivityAdapter(getActivity(), _arrayList);
+
+        _listView.setAdapter(_adapter);
+
+        _listView.setOnItemClickListener(this);
+
+        _swipeRefreshLayout.setOnRefreshListener(this);
+        _swipeRefreshLayout.post(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                         _swipeRefreshLayout.setRefreshing(true);
+                                         sendEmployee(getContext(), _requestQueue, _swipeRefreshLayout, _adapter, _arrayList, _URL);
+                                     }
+                                 }
+        );*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event

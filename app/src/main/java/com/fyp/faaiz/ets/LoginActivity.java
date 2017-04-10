@@ -64,18 +64,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sigin_button.setOnClickListener(this);
     }
 
-    private void lognRequest() {
+    private void loginRequest() {
         if (validate()) return;
 
-        StringRequest request = new StringRequest(Request.Method.POST, "http://192.168.0.105/Ets/ets_user_login.php", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, "http://192.168.0.100/Ets/ets_user_login.php", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.d("QUERY", response);
                 if (response.contains("first_name")) {
 
                     List<Employee> parse = Parser.parse(response);
-
-                    Log.d("First Name", parse.get(0).getFirst_name());
 
                     int local_id = parse.get(0).getId();
 
@@ -242,7 +239,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.signin_button:
-                lognRequest();
+                loginRequest();
                 break;
             default:
                 break;
