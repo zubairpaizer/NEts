@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Ets</string>
+    <string name="email">Email</string>
+    <string name="passowrd">Password</string>
+    <string name="show_pwd">Show Password</string>
+    <string name="register">Register</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
+</resources>
