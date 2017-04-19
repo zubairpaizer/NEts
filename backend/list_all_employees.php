@@ -1,5 +1,5 @@
 <?php 
-	
+	header('Access-Control-Allow-Origin: *'); 
 	include("config.php");
 	
 	if(isset($_GET)){
@@ -12,7 +12,7 @@
 					profile_image
 					phone_number, 
 					cnic 
-					FROM users";
+					FROM users ORDER BY ID DESC";
 		
 		$result = mysqli_query($conn, $query);
 

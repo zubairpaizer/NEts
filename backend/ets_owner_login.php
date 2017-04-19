@@ -7,7 +7,7 @@
 		$email       = $_POST['email'];
 		$password    = sha1($_POST['password']);
 
-		$query = "SELECT * FROM users WHERE email = '{$email}' AND password = '{$password}'";
+		$query = "SELECT * FROM owner WHERE email = '{$email}' AND password = '{$password}'";
 		$result = mysqli_query($conn, $query);
 
 		if($result){

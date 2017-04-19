@@ -1,6 +1,7 @@
 <?php 
 	
 	include("config.php");
+
 	
 	if(isset($_POST)){
 	
@@ -11,7 +12,7 @@
 		$cnic		 = $_POST['cnic'];
 		$password    = sha1($_POST['password']);
 
-		$query = "INSERT INTO users VALUES (NULL, '{$first_name}', '{$last_name}', '{$email}','{$phone_numer}', 'path', '{$cnic}', '{$password}',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)";
+		$query = "INSERT INTO owners VALUES (NULL, '{$first_name}', '{$last_name}', '{$email}','{$phone_numer}', 'path', '{$cnic}', '{$password}',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)";
 
 		$result = mysqli_query($conn, $query);
 
