@@ -4,14 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -52,6 +52,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button sigin_button;
     Session _session;
 
+    AppCompatRadioButton owner_radio;
+    AppCompatRadioButton user_radio;
+    String table_radio = "ets_user_singup";
+    public static String URL_SEND = "";
+
     private String email_filter = "~#^|$%&*!+,':\";{}[]\\/()<?>";
 
     private InputFilter filter = new InputFilter() {
@@ -70,11 +75,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
+        owner_radio = (AppCompatRadioButton) findViewById(R.id.loginOwnerRadio);
+        user_radio = (AppCompatRadioButton) findViewById(R.id.loginAgentRadio);
+
+        owner_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    table_radio = "ets_owner_signup";
+                    URL_SEND = "http://192.168.0.107/Ets/ets_owner_signup.php";
+                    Toast.makeText(LoginActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        user_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    table_radio = "ets_user_signup";
+                    URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
+                    Toast.makeText(LoginActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         // checking login
         auth();
         init();
         login_email.setFilters(new InputFilter[] { filter });
+        auth();
+        init();
         events();
     }
 
@@ -87,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void loginRequest() {
         if (validate()) return;
 
-        StringRequest request = new StringRequest(Request.Method.POST, "http://192.168.0.100/Ets/ets_user_login.php", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (response.contains("first_name")) {

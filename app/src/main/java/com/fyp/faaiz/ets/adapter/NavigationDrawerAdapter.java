@@ -23,35 +23,37 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     Context myContext;
     ArrayList<String> mdata;
     LayoutInflater inflater;
-    public NavigationDrawerAdapter(Context context, ArrayList<String> data){
+
+    public NavigationDrawerAdapter(Context context, ArrayList<String> data) {
         this.myContext = context;
         this.mdata = data;
     }
 
     @Override
-    public MVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.nav_drawer,parent,false);
-        MVH mvh = new MVH(view);
+    public NavigationDrawerAdapter.MVH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        NavigationDrawerAdapter.MVH mvh = new NavigationDrawerAdapter.MVH(v);
         return mvh;
     }
 
     @Override
-    public void onBindViewHolder(MVH holder, int position) {
+    public void onBindViewHolder(NavigationDrawerAdapter.MVH holder, int position) {
         holder.title.setText(mdata.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mdata.size();
     }
 
-    class MVH extends RecyclerView.ViewHolder{
+    class MVH extends RecyclerView.ViewHolder {
         TextView title;
         ImageView imageView;
+
         public MVH(View itemView) {
             super(itemView);
-            this.title = (TextView) itemView.findViewById(R.id.title_drawer);
-            this.imageView = (ImageView) itemView.findViewById(R.id.imgIcon_title_drawer);
+            this.title = (TextView) itemView.findViewById(R.id.title_img);
+            this.imageView = (ImageView) itemView.findViewById(R.id.img_row);
         }
     }
 }

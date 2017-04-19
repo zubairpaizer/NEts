@@ -1,14 +1,45 @@
 package com.fyp.faaiz.ets.tabs.employee;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.fyp.faaiz.ets.LoginActivity;
+import com.fyp.faaiz.ets.MainActivity;
+import com.fyp.faaiz.ets.NavigationDrawerItem;
 import com.fyp.faaiz.ets.R;
+import com.fyp.faaiz.ets.adapter.EmployeeAdapter;
+import com.fyp.faaiz.ets.adapter.NavigationDrawerAdapter;
+import com.fyp.faaiz.ets.model.Employee;
+import com.fyp.faaiz.ets.utils.Parser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zubair on 4/3/17.
@@ -23,7 +54,7 @@ import com.fyp.faaiz.ets.R;
  * create an instance of this fragment.
  */
 
-public class EmployeesTabsFragment extends Fragment {
+public class EmployeesTabsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,10 +65,11 @@ public class EmployeesTabsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private View _rootView;
-
     private OnFragmentInteractionListener mListener;
 
+    private View _rootView;
+    public SwipeRefreshLayout swipeRefresher;
+    ArrayList<Employee> employees;
     public EmployeesTabsFragment() {
         // Required empty public constructor
     }
@@ -63,6 +95,7 @@ public class EmployeesTabsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        employees = new ArrayList<Employee>();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -72,33 +105,94 @@ public class EmployeesTabsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.employee_tab_fragment, container, false);
+        _rootView = inflater.inflate(R.layout.employee_tab_fragment, container, false);
 
+        swipeRefresher = (SwipeRefreshLayout) _rootView.findViewById(R.id.swipe_refresher);
 
-        //_rootView = inflater.inflate(R.layout.employee_list, container, false);
+        request();
 
-/*        _listView = (ListView) _rootView.findViewById(R.id.employee_list);
+        swipeRefresher.setOnRefreshListener(this);
 
-        _swipeRefreshLayout = (SwipeRefreshLayout) _rootView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefresher.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    request();
+                                }
+                            }
+        );
 
-        _arrayList = new ArrayList<>();
+        return _rootView;
+    }
 
-        _adapter = new EmployeeActivityAdapter(getActivity(), _arrayList);
+    private void request() {
+        swipeRefresher.setRefreshing(true);
+        StringRequest request = new StringRequest(Request.Method.GET, "http://192.168.0.107/Ets/list_all_employees.php", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.contains("first_name")) {
 
-        _listView.setAdapter(_adapter);
+                    RecyclerView recyclerView = (RecyclerView) _rootView.findViewById(R.id.employee_list);
 
-        _listView.setOnItemClickListener(this);
+                    employees = Parser.parse(response);
 
-        _swipeRefreshLayout.setOnRefreshListener(this);
-        _swipeRefreshLayout.post(new Runnable() {
-                                     @Override
-                                     public void run() {
-                                         _swipeRefreshLayout.setRefreshing(true);
-                                         sendEmployee(getContext(), _requestQueue, _swipeRefreshLayout, _adapter, _arrayList, _URL);
-                                     }
-                                 }
-        );*/
+                    EmployeeAdapter adapter = new EmployeeAdapter(getActivity(), employees);
+
+                    recyclerView.setAdapter(adapter);
+
+                    recyclerView.setHasFixedSize(true);
+
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                    swipeRefresher.setRefreshing(false);
+
+                } else {
+                    Toast.makeText(getActivity(), "sorry some thing went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                swipeRefresher.setRefreshing(false);
+                NetworkResponse networkResponse = volleyError.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                    if (volleyError.getClass().equals(TimeoutError.class)) {
+                        errorMessage = "Request timeout";
+                    } else if (volleyError.getClass().equals(NoConnectionError.class)) {
+                        errorMessage = "Failed to connect server";
+                    }
+                } else {
+                    String result = new String(networkResponse.data);
+                    try {
+                        JSONObject response = new JSONObject(result);
+                        String status = response.getString("status");
+                        String message = response.getString("message");
+
+                        Log.e("Error Status", status);
+                        Log.e("Error Message", message);
+
+                        if (networkResponse.statusCode == 404)
+                            errorMessage = "Resource not found";
+                        else if (networkResponse.statusCode == 401)
+                            errorMessage = message + " Please login again";
+                        else if (networkResponse.statusCode == 400)
+                            errorMessage = message + " Check your inputs";
+                        else if (networkResponse.statusCode == 500)
+                            errorMessage = message + " Something is getting wrong";
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.i("Error", errorMessage);
+                volleyError.printStackTrace();
+
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        queue.add(request);
+
+        //AppController.getInstance().addToRequestQueue(request);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -124,6 +218,11 @@ public class EmployeesTabsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onRefresh() {
+        request();
     }
 
     /**

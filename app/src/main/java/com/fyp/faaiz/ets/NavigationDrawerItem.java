@@ -7,7 +7,9 @@ package com.fyp.faaiz.ets;
 import java.util.ArrayList;
 
 public class NavigationDrawerItem {
+
     public static ArrayList<String> getData() {
+
         ArrayList list = new ArrayList();
 
         for (int i = 0; i < 10; i++) {

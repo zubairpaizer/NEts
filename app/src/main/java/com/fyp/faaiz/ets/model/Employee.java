@@ -89,4 +89,9 @@ public class Employee {
         this.cnic = cnic;
     }
 
+
+    public String getFullName(){
+        return this.first_name + " " + this.last_name;
+    }
+
 }

@@ -1,14 +1,19 @@
 package com.fyp.faaiz.ets;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatRadioButton;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +54,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     Button signup;
     Session _session;
 
+
+    TextView counter_phone;
+    TextView counter_cnic;
+
+    AppCompatRadioButton owner_radio;
+    AppCompatRadioButton user_radio;
+
+    String table_radio = "ets_user_singup";
+    public static String URL_SEND = "";
+
+
     private String email_filter_exp = "~#^|$%&*!+,':\";{}[]\\/()<?>";
     private String name_exp = "._-123456890@ ";
     private String phone_exp = "~#^|$%&*!,'.-_:\";{}[]\\/()<?> ";
@@ -79,7 +95,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     };
 
     private InputFilter name_filter = new InputFilter() {
-
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 
@@ -97,10 +112,94 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         auth();
         init();
-        email.setFilters(new InputFilter[] { email_filter });
-        first_name.setFilters(new InputFilter[] { email_filter, name_filter});
-        last_name.setFilters(new InputFilter[] { email_filter, name_filter});
-        phone.setFilters(new InputFilter[] { phone_filter });
+
+        owner_radio = (AppCompatRadioButton) findViewById(R.id.registerOwnerRadio);
+        user_radio = (AppCompatRadioButton) findViewById(R.id.registerAgnetRadio);
+
+        owner_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    URL_SEND = "http://192.168.0.107/Ets/ets_owner_login.php";
+                    Toast.makeText(RegisterActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        user_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    URL_SEND = "http://192.168.0.107/Ets/ets_user_login.php";
+                    Toast.makeText(RegisterActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        email.setFilters(new InputFilter[]{email_filter});
+        first_name.setFilters(new InputFilter[]{email_filter, name_filter});
+        last_name.setFilters(new InputFilter[]{email_filter, name_filter});
+        phone.setFilters(new InputFilter[]{phone_filter});
+        auth();
+        init();
+
+        cnic.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (cnic.getText().length() >= 0) {
+                    int count = 13;
+                    counter_cnic.setText("Characters Left : " + (count - cnic.getText().length()));
+                    counter_cnic.setTextColor(Color.GREEN);
+
+                    if (cnic.getText().length() == 13) {
+                        counter_cnic.setTextColor(Color.RED);
+                    }
+
+                    if (cnic.getText().length() > 13) {
+                        counter_cnic.setTextColor(Color.RED);
+                    }
+                }
+            }
+        });
+
+        phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (phone.getText().length() >= 0) {
+                    int count = 13;
+                    counter_phone.setText("Characters Left : " + (count - phone.getText().length()));
+                    counter_phone.setTextColor(Color.GREEN);
+
+                    if (phone.getText().length() == 13) {
+                        counter_phone.setTextColor(Color.RED);
+                    }
+
+                    if (phone.getText().length() > 13) {
+                        counter_phone.setTextColor(Color.RED);
+                    }
+                }
+            }
+        });
+
         events();
     }
 
@@ -136,8 +235,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         login_activity.setOnClickListener(this);
     }
 
+
+
     private void registerRequest() {
-        StringRequest request = new StringRequest(Request.Method.POST, "http://192.168.0.105/Ets/ets_user_signup.php", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, URL_SEND , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //Log.d("RESPONSE", response);
@@ -225,6 +326,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void init() {
 
+        counter_phone = (TextView) findViewById(R.id.register_phone_number_count);
+        counter_cnic = (TextView) findViewById(R.id.register_cnic_count);
         signup = (Button) findViewById(R.id.register_signup_btn);
         login_activity = (TextView) findViewById(R.id.login_intent);
         first_name = (EditText) findViewById(R.id.register_first_name);

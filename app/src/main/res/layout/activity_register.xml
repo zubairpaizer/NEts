@@ -238,6 +238,12 @@
                                 android:inputType="phone"
                                 android:singleLine="true" />
 
+                            <TextView
+                                android:id="@+id/register_phone_number_count"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="phone"/>
+
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
 
@@ -270,6 +276,12 @@
                                 android:hint="CNIC"
                                 android:inputType="number"
                                 android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/register_cnic_count"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="phone"/>
 
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>

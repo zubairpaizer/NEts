@@ -21,19 +21,17 @@ public class Parser {
 
     public static final String TAG = Parser.class.getSimpleName();
 
-    public static List<Employee> parse(String response) {
+    public static ArrayList<Employee> parse(String response) {
 
+        ArrayList<Employee> employees = new ArrayList<>();
         String first_name, last_name, email, profile_image, phone_number, cnic = "";
         int id = 0;
 
         try {
-
             JSONArray obj = new JSONArray(response);
-            List<Employee> employees = new ArrayList<>();
-            Employee employee = new Employee();
-
             for (int i = 0; i < obj.length(); i++) {
 
+                Employee employee = new Employee();
                 JSONObject jsonObject = obj.getJSONObject(i);
 
                 if (contains(jsonObject, "id")) {
@@ -71,11 +69,9 @@ public class Parser {
                 }
 
                 employees.add(employee);
-                Log.d(TAG, "Employee Parse: " + employee);
             }
 
             return employees;
-
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -12,10 +12,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fyp.faaiz.ets.adapter.EmployeeAdapter;
 import com.fyp.faaiz.ets.adapter.NavigationDrawerAdapter;
 
 
@@ -37,16 +39,18 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        setUpRecyclerView(v);
-        return v;
-    }
 
-    private void setUpRecyclerView(View view) {
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.drawerList);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.drawerList);
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), NavigationDrawerItem.getData());
+
         recyclerView.setAdapter(adapter);
+
+        recyclerView.setHasFixedSize(true);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        return v;
     }
 
     public void setUpDrawer(int fragmentID, DrawerLayout drawerLayout, Toolbar toolbar) {
