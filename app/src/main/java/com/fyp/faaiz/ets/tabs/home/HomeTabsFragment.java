@@ -4,10 +4,14 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +21,19 @@ import com.fyp.faaiz.ets.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiActivity;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-/**
- * Created by zubair on 4/3/17.
- */
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +43,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Use the {@link HomeTabsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeTabsFragment extends Fragment {
+public class HomeTabsFragment extends Fragment
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,9 +62,17 @@ public class HomeTabsFragment extends Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
     public static final int ERROR_DIALOG_REQUEST = 9001;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationListener mLocationListener;
 
     public HomeTabsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        mGoogleApiClient.connect();
     }
 
     /**
@@ -83,9 +96,51 @@ public class HomeTabsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermission();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        mGoogleApiClient.connect();
+
+    }
+
+    private void checkPermission() {
+        boolean permissionGrantedFine = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean permissionGrantedCoarse = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+
+        if (permissionGrantedFine) {
+            Toast.makeText(getActivity(), "permissionGrantedFine", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Not permissionGrantedFine", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        }
+
+        if (permissionGrantedCoarse) {
+            Toast.makeText(getActivity(), "permissionGrantedCoarse", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Not permissionGrantedCoarse", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
+        }
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 200: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), grantResults[0], Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -95,9 +150,10 @@ public class HomeTabsFragment extends Fragment {
         if (serviceOK()) {
             _rootView = inflater.inflate(R.layout.home_map, container, false);
             mMapView = (MapView) _rootView.findViewById(R.id.map);
-            mMapView.onCreate(savedInstanceState);
 
+            mMapView.onCreate(savedInstanceState);
             mMapView.onResume(); // needed to get the map to display immediately
+
 
             try {
                 MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -108,28 +164,19 @@ public class HomeTabsFragment extends Fragment {
             mMapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap mMap) {
-                    googleMap = mMap;
-
-                    // For showing a move to my location button
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
+                        Toast.makeText(getActivity(), "Return", Toast.LENGTH_SHORT).show();
                         return;
+                    } else {
+                        googleMap = mMap;
+                        LatLng sydney = new LatLng(24.8615, 67.0099);
+                        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        googleMap.setMyLocationEnabled(true);
+                        getFuseLocation();
                     }
-                    googleMap.setMyLocationEnabled(true);
 
-                    // For dropping a marker at a point on the Map
-                    LatLng sydney = new LatLng(-34, 151);
-                    googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                    // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             });
 
@@ -181,6 +228,24 @@ public class HomeTabsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void getFuseLocation() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getActivity(), "Location permission required", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (currentLocation == null) {
+                Toast.makeText(getActivity(), "Location Not Found", Toast.LENGTH_SHORT).show();
+            } else {
+                LatLng latlng = new LatLng(2444, 2458);
+                Toast.makeText(getActivity(), latlng.toString(), Toast.LENGTH_SHORT).show();
+                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latlng, 15);
+                googleMap.animateCamera(update);
+            }
+        }
+    }
+
+
     public boolean serviceOK() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int isAvailable = apiAvailability.isGooglePlayServicesAvailable(getActivity());
@@ -197,6 +262,44 @@ public class HomeTabsFragment extends Fragment {
 
     public void setLocations(double lat, double lng, int zoom) {
         LatLng latLng = new LatLng(lat, lng);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(zoom).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+
+    /* GOOGLE API CLIENT */
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        Toast.makeText(getActivity(), "Ready to Map", Toast.LENGTH_SHORT).show();
+        getFuseLocation();
+        mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Toast.makeText(getActivity(), location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                setLocations(location.getLatitude(), location.getLongitude(), 15);
+            }
+        };
+
+        LocationRequest request = LocationRequest.create();
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setInterval(5000);
+        request.setFastestInterval(1000);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, mLocationListener);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
 }

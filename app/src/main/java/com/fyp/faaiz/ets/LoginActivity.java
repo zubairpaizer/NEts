@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     AppCompatRadioButton owner_radio;
     AppCompatRadioButton user_radio;
-    String table_radio = "ets_user_singup";
+    String table_radio = "ets_user_login";
     public static String URL_SEND = "";
 
     private String email_filter = "~#^|$%&*!+,':\";{}[]\\/()<?>";
@@ -83,8 +83,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    table_radio = "ets_owner_signup";
-                    URL_SEND = "http://192.168.0.107/Ets/ets_owner_signup.php";
+                    table_radio = "ets_owner_login";
+                    URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
                     Toast.makeText(LoginActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    table_radio = "ets_user_signup";
+                    table_radio = "ets_user_login";
                     URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
                     Toast.makeText(LoginActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
                 }

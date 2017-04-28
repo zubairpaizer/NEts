@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.model.Employee;
@@ -36,9 +37,23 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
     }
 
     @Override
-    public void onBindViewHolder(MVH holder, int position) {
+    public void onBindViewHolder(MVH holder, final int position) {
         holder.title.setText(mdata.get(position).getFullName());
         holder.desc.setText(mdata.get(position).getEmail());
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(myContext, mdata.get(position).getId() + "A", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(myContext, mdata.get(position).getId() + mdata.get(position).getFullName(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -50,12 +65,16 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         TextView title;
         TextView desc;
         ImageView imageView;
+        ImageView detail;
+        ImageView delete;
 
         public MVH(View itemView) {
             super(itemView);
             this.title = (TextView) itemView.findViewById(R.id.employee_name);
             this.desc = (TextView) itemView.findViewById(R.id.employee_desc);
             this.imageView = (ImageView) itemView.findViewById(R.id.employee_image);
+            this.delete = (ImageView) itemView.findViewById(R.id.delete_employee);
+            this.detail = (ImageView) itemView.findViewById(R.id.detail_employee);
         }
     }
 }
