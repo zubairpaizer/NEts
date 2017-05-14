@@ -41,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public static final String EMAIL = "email";
     public static final String PHONE_NUMBER = "phone";
     public static final String CNIC = "cnic";
+    public static final String PROFILE_IMAGE = "profile_image";
     public static final String PASSWORD = "password";
 
     TextView login_activity;
@@ -63,7 +64,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     String table_radio = "ets_user_singup";
     public static String URL_SEND = "";
-
 
     private String email_filter_exp = "~#^|$%&*!+,':\";{}[]\\/()<?>";
     private String name_exp = "._-123456890@ ";
@@ -110,6 +110,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/signup/user";
+        }else{
+            table_radio = "ets_user_signup";
+            URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
+        }
+
         auth();
         init();
 
@@ -119,8 +126,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         owner_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    URL_SEND = "http://192.168.0.107/Ets/ets_owner_login.php";
+                if (isChecked) {
+
+                    if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+                        URL_SEND = ApplicationState.REMOTE_BASE_URL + "/signup/owner";
+                    }else{
+                        table_radio = "ets_owner_signup";
+                        URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
+                    }
+
                     Toast.makeText(RegisterActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -129,8 +143,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         user_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    URL_SEND = "http://192.168.0.107/Ets/ets_user_login.php";
+                if (isChecked) {
+                    if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+                        URL_SEND = ApplicationState.REMOTE_BASE_URL + "/user/signup";
+                    }else{
+                        table_radio = "ets_user_signup";
+                        URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
+                    }
                     Toast.makeText(RegisterActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -236,16 +255,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     private void registerRequest() {
-        StringRequest request = new StringRequest(Request.Method.POST, URL_SEND , new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //Log.d("RESPONSE", response);
-                //Toast.makeText(RegisterActivity.this, response, Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
+                Toast.makeText(RegisterActivity.this, response + URL_SEND, Toast.LENGTH_SHORT).show();
+                if (response.contains("message")) {
+                    Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }else{
+                    Toast.makeText(RegisterActivity.this, "sorry some thing went wrong"
+                            , Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

@@ -1,6 +1,8 @@
 package com.fyp.faaiz.ets.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.model.Employee;
+import com.fyp.faaiz.ets.tabs.employee.EmployeeDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(myContext, mdata.get(position).getId() + "A", Toast.LENGTH_SHORT).show();
             }
         });
@@ -51,6 +55,21 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         holder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(myContext, EmployeeDetail.class);
+
+                int newId = (int) mdata.get(position).getId();
+                String fname = mdata.get(position).getFirst_name();
+                String emailId = mdata.get(position).getEmail();
+                String mobile = mdata.get(position).getPhone_number();
+                String address = "Address .. .. ..";
+
+                i.putExtra("empId", newId);
+                i.putExtra("name", fname);
+                i.putExtra("emailId", emailId);
+                i.putExtra("address", address);
+                i.putExtra("mobile", mobile);
+
+                myContext.startActivity(i);
                 Toast.makeText(myContext, mdata.get(position).getId() + mdata.get(position).getFullName(), Toast.LENGTH_SHORT).show();
             }
         });

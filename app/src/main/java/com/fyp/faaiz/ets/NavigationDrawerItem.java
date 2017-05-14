@@ -13,7 +13,7 @@ public class NavigationDrawerItem {
         ArrayList list = new ArrayList();
 
         for (int i = 0; i < 10; i++) {
-            list.add("Zubair Ibrahim" + i);
+            list.add("Faaiz Hussain" + i);
         }
 
         return list;

@@ -75,7 +75,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
+
+        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/user/login";
+        }else{
+            URL_SEND = ApplicationState.LOCAL_BASE_URL + "/Ets/" + table_radio + ".php";
+        }
+
         owner_radio = (AppCompatRadioButton) findViewById(R.id.loginOwnerRadio);
         user_radio = (AppCompatRadioButton) findViewById(R.id.loginAgentRadio);
 
@@ -83,8 +89,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    table_radio = "ets_owner_login";
-                    URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
+                    if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+                        URL_SEND = ApplicationState.REMOTE_BASE_URL + "/login/owner";
+                    }else{
+                        table_radio = "ets_owner_login";
+                        URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
+                    }
                     Toast.makeText(LoginActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -94,8 +104,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    table_radio = "ets_user_login";
-                    URL_SEND = "http://192.168.0.107/Ets/" + table_radio + ".php";
+                    if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+                        URL_SEND = ApplicationState.REMOTE_BASE_URL + "/login/user";
+                    }else{
+                        table_radio = "ets_user_login";
+                        URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
+                    }
                     Toast.makeText(LoginActivity.this, URL_SEND, Toast.LENGTH_SHORT).show();
                 }
             }

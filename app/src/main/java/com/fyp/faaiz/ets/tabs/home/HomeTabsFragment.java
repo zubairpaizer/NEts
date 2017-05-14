@@ -148,6 +148,7 @@ public class HomeTabsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (serviceOK()) {
+
             _rootView = inflater.inflate(R.layout.home_map, container, false);
             mMapView = (MapView) _rootView.findViewById(R.id.map);
 
@@ -183,7 +184,6 @@ public class HomeTabsFragment extends Fragment
         } else {
             _rootView = inflater.inflate(R.layout.home_tabs_fragment, container, false);
         }
-
         return _rootView;
     }
 

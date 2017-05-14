@@ -1,5 +1,6 @@
 package com.fyp.faaiz.ets.tabs.employee;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.LoginActivity;
 import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.NavigationDrawerItem;
@@ -125,8 +127,16 @@ public class EmployeesTabsFragment extends Fragment implements SwipeRefreshLayou
     }
 
     private void request() {
+
+        String URL_SEND = "";
+        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/employees";
+        }else{
+            URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/list_all_employees.php";
+        }
+        Toast.makeText(getActivity(),    URL_SEND, Toast.LENGTH_SHORT).show();
         swipeRefresher.setRefreshing(true);
-        StringRequest request = new StringRequest(Request.Method.GET, "http://192.168.0.107/Ets/list_all_employees.php", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
