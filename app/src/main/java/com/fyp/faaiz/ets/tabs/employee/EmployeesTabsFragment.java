@@ -139,7 +139,7 @@ public class EmployeesTabsFragment extends Fragment implements SwipeRefreshLayou
         StringRequest request = new StringRequest(Request.Method.GET, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
                 if (response.contains("first_name")) {
 
                     RecyclerView recyclerView = (RecyclerView) _rootView.findViewById(R.id.employee_list);

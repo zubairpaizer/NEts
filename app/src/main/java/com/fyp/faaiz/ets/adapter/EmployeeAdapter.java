@@ -1,9 +1,13 @@
 package com.fyp.faaiz.ets.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +15,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.tabs.employee.EmployeeDetail;
+import com.fyp.faaiz.ets.utils.Parser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +66,24 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(myContext, mdata.get(position).getId() + "A", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(myContext);
+                alertDialogBuilder.setTitle("Do you want to delete?");
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                request(mdata.get(position).getId(),position);
+                                Toast.makeText(myContext, mdata.get(position).getId() + "A", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 
@@ -97,5 +132,65 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
             this.delete = (ImageView) itemView.findViewById(R.id.delete_employee);
             this.detail = (ImageView) itemView.findViewById(R.id.detail_employee);
         }
+    }
+
+    private void request(int id, final int index) {
+        final EmployeeAdapter t = this;
+        String URL_SEND = "";
+        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/employee/" + id;
+        }else{
+            URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/list_all_employees.php?id=" + id;
+        }
+
+        Toast.makeText(myContext,URL_SEND, Toast.LENGTH_SHORT).show();
+        StringRequest request = new StringRequest(Request.Method.DELETE, URL_SEND, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mdata.remove(index);
+                t.notifyDataSetChanged();
+                Toast.makeText(myContext, response, Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                NetworkResponse networkResponse = volleyError.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                    if (volleyError.getClass().equals(TimeoutError.class)) {
+                        errorMessage = "Request timeout";
+                    } else if (volleyError.getClass().equals(NoConnectionError.class)) {
+                        errorMessage = "Failed to connect server";
+                    }
+                } else {
+                    String result = new String(networkResponse.data);
+                    try {
+                        JSONObject response = new JSONObject(result);
+                        String status = response.getString("status");
+                        String message = response.getString("message");
+
+                        Log.e("Error Status", status);
+                        Log.e("Error Message", message);
+
+                        if (networkResponse.statusCode == 404)
+                            errorMessage = "Resource not found";
+                        else if (networkResponse.statusCode == 401)
+                            errorMessage = message + " Please login again";
+                        else if (networkResponse.statusCode == 400)
+                            errorMessage = message + " Check your inputs";
+                        else if (networkResponse.statusCode == 500)
+                            errorMessage = message + " Something is getting wrong";
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.i("Error", errorMessage);
+                volleyError.printStackTrace();
+
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(myContext);
+        queue.add(request);
     }
 }

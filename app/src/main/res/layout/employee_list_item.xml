@@ -68,7 +68,7 @@
                     android:layout_margin="7dp"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_discard"
-                    android:tint="@color/colorPrimary" />
+                    android:tint="@color/black" />
 
                 <ImageView
                     android:id="@+id/detail_employee"
@@ -76,8 +76,8 @@
                     android:layout_height="25dp"
                     android:layout_margin="7dp"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_make_copy"
-                    android:tint="@color/colorPrimary" />
+                    android:src="@drawable/details"
+                    android:tint="@color/black" />
 
             </LinearLayout>
         </LinearLayout>

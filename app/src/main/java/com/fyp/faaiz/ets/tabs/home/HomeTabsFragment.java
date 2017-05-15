@@ -96,15 +96,15 @@ public class HomeTabsFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkPermission();
+        //checkPermission();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+/*        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        mGoogleApiClient.connect();
+        mGoogleApiClient.connect();*/
 
     }
 
@@ -147,7 +147,8 @@ public class HomeTabsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (serviceOK()) {
+       // if (serviceOK()) {
+/*
 
             _rootView = inflater.inflate(R.layout.home_map, container, false);
             mMapView = (MapView) _rootView.findViewById(R.id.map);
@@ -182,8 +183,8 @@ public class HomeTabsFragment extends Fragment
             });
 
         } else {
-            _rootView = inflater.inflate(R.layout.home_tabs_fragment, container, false);
-        }
+*/      _rootView = inflater.inflate(R.layout.home_tabs_fragment, container, false);
+//        }
         return _rootView;
     }
 
