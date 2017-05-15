@@ -36,7 +36,7 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_toRightOf="@+id/address"
                 android:layout_weight="2"
-                android:src="@drawable/home"/>
+                android:src="@drawable/employee"/>
 
             <LinearLayout
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                android:layout_width="0dp"
@@ -45,16 +45,16 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/address"
+                    android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Address"
+                    android:text="Name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#212121"/>
 
 
                 <TextView
-                    android:id="@+id/employee_address"
+                    android:id="@+id/employee_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""

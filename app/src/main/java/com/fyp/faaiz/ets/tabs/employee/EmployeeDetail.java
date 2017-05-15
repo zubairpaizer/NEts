@@ -16,7 +16,7 @@ public class EmployeeDetail extends AppCompatActivity {
 
     TextView mobile_tv;
     TextView email_tv;
-    TextView address_tv;
+    TextView name_tv;
     ImageView iv_call;
     ImageView iv_email;
     @Override
@@ -26,17 +26,17 @@ public class EmployeeDetail extends AppCompatActivity {
 
         mobile_tv = (TextView) findViewById(R.id.employee_number);
         email_tv = (TextView) findViewById(R.id.employee_email);
-        address_tv = (TextView) findViewById(R.id.employee_address);
+        name_tv = (TextView) findViewById(R.id.employee_name);
         iv_call = (ImageView) findViewById(R.id.user_phone);
         iv_email = (ImageView) findViewById(R.id.user_email);
 
-        String empID = getIntent().getExtras().get("empId").toString();
+        //String empID = getIntent().getExtras().get("empId").toString();
         final String name = getIntent().getExtras().get("name").toString();
         final String empEmail = getIntent().getExtras().get("emailId").toString();
-        final String address = getIntent().getExtras().get("address").toString();
+        //final String address = getIntent().getExtras().get("address").toString();
         final String mobile = getIntent().getExtras().get("mobile").toString();
 
-        address_tv.setText(address);
+        name_tv.setText(name);
         mobile_tv.setText(mobile);
         email_tv.setText(empEmail);
 

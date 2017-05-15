@@ -59,12 +59,14 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
 
                 int newId = (int) mdata.get(position).getId();
                 String fname = mdata.get(position).getFirst_name();
+                String lname = mdata.get(position).getLast_name();
                 String emailId = mdata.get(position).getEmail();
                 String mobile = mdata.get(position).getPhone_number();
                 String address = "Address .. .. ..";
 
+                String full_name = fname + " " + lname;
                 i.putExtra("empId", newId);
-                i.putExtra("name", fname);
+                i.putExtra("name", full_name);
                 i.putExtra("emailId", emailId);
                 i.putExtra("address", address);
                 i.putExtra("mobile", mobile);
