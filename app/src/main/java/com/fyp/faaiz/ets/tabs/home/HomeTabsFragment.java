@@ -43,10 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Use the {@link HomeTabsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeTabsFragment extends Fragment
-        implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+public class HomeTabsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -96,15 +93,13 @@ public class HomeTabsFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //checkPermission();
+        checkPermission();
 
-/*        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
                 .build();
 
-        mGoogleApiClient.connect();*/
+        mGoogleApiClient.connect();
 
     }
 
@@ -114,16 +109,16 @@ public class HomeTabsFragment extends Fragment
 
 
         if (permissionGrantedFine) {
-            Toast.makeText(getActivity(), "permissionGrantedFine", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "permissionGrantedFine", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Not permissionGrantedFine", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Not permissionGrantedFine", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
         }
 
         if (permissionGrantedCoarse) {
-            Toast.makeText(getActivity(), "permissionGrantedCoarse", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "permissionGrantedCoarse", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Not permissionGrantedCoarse", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Not permissionGrantedCoarse", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
         }
 
@@ -147,8 +142,8 @@ public class HomeTabsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       // if (serviceOK()) {
-/*
+        if (serviceOK()) {
+
 
             _rootView = inflater.inflate(R.layout.home_map, container, false);
             mMapView = (MapView) _rootView.findViewById(R.id.map);
@@ -176,15 +171,14 @@ public class HomeTabsFragment extends Fragment
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15).build();
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         googleMap.setMyLocationEnabled(true);
-                        getFuseLocation();
                     }
 
                 }
             });
 
         } else {
-*/      _rootView = inflater.inflate(R.layout.home_tabs_fragment, container, false);
-//        }
+            _rootView = inflater.inflate(R.layout.home_tabs_fragment, container, false);
+        }
         return _rootView;
     }
 
@@ -229,14 +223,15 @@ public class HomeTabsFragment extends Fragment
         void onFragmentInteraction(Uri uri);
     }
 
+    /*
     public void getFuseLocation() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getActivity(), "Location permission required", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Location permission required", Toast.LENGTH_SHORT).show();
             return;
         } else {
             Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (currentLocation == null) {
-                Toast.makeText(getActivity(), "Location Not Found", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Location Not Found", Toast.LENGTH_SHORT).show();
             } else {
                 LatLng latlng = new LatLng(2444, 2458);
                 Toast.makeText(getActivity(), latlng.toString(), Toast.LENGTH_SHORT).show();
@@ -244,7 +239,7 @@ public class HomeTabsFragment extends Fragment
                 googleMap.animateCamera(update);
             }
         }
-    }
+    }*/
 
 
     public boolean serviceOK() {
@@ -267,7 +262,10 @@ public class HomeTabsFragment extends Fragment
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    /* GOOGLE API CLIENT */
+/*
+    */
+/* GOOGLE API CLIENT *//*
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -302,5 +300,6 @@ public class HomeTabsFragment extends Fragment
 
     }
 
+*/
 
 }

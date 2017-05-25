@@ -1,4 +1,4 @@
-package com.fyp.faaiz.ets;
+package com.fyp.faaiz.ets.drawer;
 
 /**
  * Created by zubair on 4/1/17.
@@ -12,12 +12,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fyp.faaiz.ets.adapter.EmployeeAdapter;
+import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.adapter.NavigationDrawerAdapter;
 
 

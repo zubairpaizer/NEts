@@ -1,4 +1,4 @@
-package com.fyp.faaiz.ets.utils;
+package com.fyp.faaiz.ets.util;
 
 import android.app.Application;
 import android.text.TextUtils;

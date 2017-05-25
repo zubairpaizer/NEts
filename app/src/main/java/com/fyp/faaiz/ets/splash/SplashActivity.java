@@ -1,9 +1,12 @@
-package com.fyp.faaiz.ets;
+package com.fyp.faaiz.ets.splash;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.fyp.faaiz.ets.auth.LoginActivity;
+import com.fyp.faaiz.ets.R;
 
 public class SplashActivity extends AppCompatActivity {
     private final int SPLASH_DISPLAY_LENGTH = 2000;

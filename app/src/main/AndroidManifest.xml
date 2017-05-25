@@ -26,15 +26,15 @@
         </activity>
 
         <!-- LoginActvity -->
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".auth.LoginActivity" />
+        <activity android:name=".splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".auth.RegisterActivity" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -43,7 +43,17 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".tabs.employee.EmployeeDetail"></activity>
+        <activity android:name=".tabs.employee.EmployeeDetail" />
+
+        <receiver
+            android:name=".broadcast.LocationReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".service.TrackerService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

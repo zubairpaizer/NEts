@@ -1,4 +1,4 @@
-package com.fyp.faaiz.ets.utils;
+package com.fyp.faaiz.ets.util;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;

@@ -1,7 +1,9 @@
-package com.fyp.faaiz.ets;
+package com.fyp.faaiz.ets.auth;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fyp.faaiz.ets.ApplicationState;
+import com.fyp.faaiz.ets.MainActivity;
+import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.session.Session;
 
 import java.util.HashMap;
@@ -54,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     EditText confirm_password;
     Button signup;
     Session _session;
+    ProgressBar progressBar;
 
 
     TextView counter_phone;
@@ -116,6 +123,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             table_radio = "ets_user_signup";
             URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
         }
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar_signup);
 
         auth();
         init();
@@ -256,6 +265,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void registerRequest() {
+        progressBar.setVisibility(View.VISIBLE);
         StringRequest request = new StringRequest(Request.Method.POST, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -266,13 +276,40 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     startActivity(i);
                     finish();
                 }else{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        signup.setBackground(getDrawable(R.drawable.botton_border));
+                        signup.setEnabled(true);
+                        signup.setText("Sign Up");
+                    }else{
+                        Drawable button = getResources().getDrawable(R.drawable.botton_border);
+                        signup.setBackground(button);
+                        signup.setEnabled(true);
+                        signup.setText("Sign Up");
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+                    signup.setText("Sign Up");
                     Toast.makeText(RegisterActivity.this, "sorry some thing went wrong"
                             , Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    signup.setBackground(getDrawable(R.drawable.botton_border));
+                    signup.setEnabled(true);
+                    signup.setText("Sign Up");
+                }else{
+                    Drawable button = getResources().getDrawable(R.drawable.botton_border);
+                    signup.setBackground(button);
+                    signup.setEnabled(true);
+                    signup.setText("Sign Up");
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+                signup.setText("Sign Up");
+
                 Toast.makeText(RegisterActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Error", error.toString());
             }
@@ -367,6 +404,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.register_signup_btn:
                 if (validate()) return;
+                signup.setEnabled(false);
+                signup.setBackgroundColor(Color.GRAY);
+                signup.setText("");
                 registerRequest();
                 break;
             case R.id.login_intent:

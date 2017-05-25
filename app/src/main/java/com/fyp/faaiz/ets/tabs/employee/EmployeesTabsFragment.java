@@ -1,8 +1,6 @@
 package com.fyp.faaiz.ets.tabs.employee;
 
-import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -26,22 +23,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fyp.faaiz.ets.ApplicationState;
-import com.fyp.faaiz.ets.LoginActivity;
-import com.fyp.faaiz.ets.MainActivity;
-import com.fyp.faaiz.ets.NavigationDrawerItem;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.adapter.EmployeeAdapter;
-import com.fyp.faaiz.ets.adapter.NavigationDrawerAdapter;
 import com.fyp.faaiz.ets.model.Employee;
-import com.fyp.faaiz.ets.utils.Parser;
+import com.fyp.faaiz.ets.util.Parser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zubair on 4/3/17.

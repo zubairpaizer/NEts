@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/loginpanel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -78,22 +79,23 @@
                     android:orientation="vertical"
                     android:paddingTop="30dp">
 
+
                     <RadioGroup
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
 
                         <android.support.v7.widget.AppCompatRadioButton
-                            android:layout_width="wrap_content"
                             android:id="@+id/loginAgentRadio"
-                            android:checked="true"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checked="true"
                             android:text="Agent" />
 
                         <android.support.v7.widget.AppCompatRadioButton
-                            android:layout_width="wrap_content"
                             android:id="@+id/loginOwnerRadio"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Owner" />
 
@@ -172,21 +174,41 @@
                         android:text="Forgot Password?" />
 
 
-                    <Button
-                        android:id="@+id/signin_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:background="@drawable/botton_border"
-                        android:text="Sign in"
-                        android:textAllCaps="false"
-                        android:textColor="#fff"
-                        android:textSize="18sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/signin_button"
+                            android:layout_marginTop="18dp"
+                            android:background="@drawable/botton_border"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:elevation="1dp"
+                            android:text="Sign In"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="18sp" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_alignBottom="@+id/signin_button"
+                            android:layout_alignTop="@+id/signin_button"
+                            android:layout_centerHorizontal="true"
+                            android:elevation="2dp"
+                            android:indeterminateTint="@color/colorPrimary"
+                            android:visibility="invisible" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
             </RelativeLayout>
 
         </LinearLayout>
-
     </ScrollView>
 </RelativeLayout>

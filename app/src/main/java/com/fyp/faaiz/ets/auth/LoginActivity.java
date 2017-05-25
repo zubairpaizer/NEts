@@ -1,8 +1,12 @@
-package com.fyp.faaiz.ets;
+package com.fyp.faaiz.ets.auth;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.transition.Visibility;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.text.InputFilter;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +31,12 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fyp.faaiz.ets.ApplicationState;
+import com.fyp.faaiz.ets.MainActivity;
+import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.session.Session;
-import com.fyp.faaiz.ets.utils.Parser;
+import com.fyp.faaiz.ets.util.Parser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     RadioButton login_owner;
     Button sigin_button;
     Session _session;
+    ProgressBar progressBar;
 
     AppCompatRadioButton owner_radio;
     AppCompatRadioButton user_radio;
@@ -77,11 +86,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         if(ApplicationState.REMOTE_DATABASE_ACTIVE){
-            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/user/login";
+            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/login/user";
         }else{
             URL_SEND = ApplicationState.LOCAL_BASE_URL + "/Ets/" + table_radio + ".php";
         }
 
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         owner_radio = (AppCompatRadioButton) findViewById(R.id.loginOwnerRadio);
         user_radio = (AppCompatRadioButton) findViewById(R.id.loginAgentRadio);
 
@@ -132,11 +143,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loginRequest() {
-        if (validate()) return;
-
+        if (validate()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                sigin_button.setEnabled(true);
+                sigin_button.setText("Sign In");
+                sigin_button.setBackground(getDrawable(R.drawable.botton_border));
+            }else{
+                Drawable button = getResources().getDrawable(R.drawable.botton_border);
+                sigin_button.setBackground(button);
+            }
+            sigin_button.setEnabled(true);
+            sigin_button.setText("Sign In");
+            return;
+        };
+        progressBar.setVisibility(View.VISIBLE);
         StringRequest request = new StringRequest(Request.Method.POST, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.d("Response", response);
                 if (response.contains("first_name")) {
 
                     List<Employee> parse = Parser.parse(response);
@@ -154,15 +178,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(i);
 
                     finish();
-
                 } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sigin_button.setBackground(getDrawable(R.drawable.botton_border));
+                        sigin_button.setEnabled(true);
+                        sigin_button.setText("Sign In");
+                    }else{
+                        Drawable button = getResources().getDrawable(R.drawable.botton_border);
+                        sigin_button.setBackground(button);
+                        sigin_button.setEnabled(true);
+                        sigin_button.setText("Sign In");
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+                    sigin_button.setText("Sign In");
                     Toast.makeText(LoginActivity.this, "username/password invalid", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    sigin_button.setBackground(getDrawable(R.drawable.botton_border));
+                    sigin_button.setEnabled(true);
+                    sigin_button.setText("Sign In");
+                }else{
+                    Drawable button = getResources().getDrawable(R.drawable.botton_border);
+                    sigin_button.setBackground(button);
+                    sigin_button.setEnabled(true);
+                    sigin_button.setText("Sign In");
+                }
                 NetworkResponse networkResponse = volleyError.networkResponse;
                 String errorMessage = "Unknown error";
                 if (networkResponse == null) {
@@ -174,6 +219,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     String result = new String(networkResponse.data);
                     try {
+                        Log.d("Response", result);
                         JSONObject response = new JSONObject(result);
                         String status = response.getString("status");
                         String message = response.getString("message");
@@ -195,6 +241,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
                 Log.i("Error", errorMessage);
+                Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 volleyError.printStackTrace();
 
             }
@@ -306,6 +353,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.signin_button:
+                sigin_button.setEnabled(false);
+                sigin_button.setText("");
+                sigin_button.setBackgroundColor(Color.GRAY);
                 loginRequest();
                 break;
             default:

@@ -41,7 +41,7 @@
     </LinearLayout>
     <fragment
         android:id="@+id/nav_drawer_fragment"
-        android:name="com.fyp.faaiz.ets.NavigationDrawerFragment"
+        android:name="com.fyp.faaiz.ets.drawer.NavigationDrawerFragment"
         app:layout="@layout/fragment_navigation_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"

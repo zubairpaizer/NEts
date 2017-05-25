@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.fyp.faaiz.ets.SplashActivity">
+    tools:context="com.fyp.faaiz.ets.splash.SplashActivity">
 
     <ImageView
         android:padding="50dp"

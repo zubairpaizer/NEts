@@ -1,7 +1,14 @@
 package com.fyp.faaiz.ets;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.fyp.faaiz.ets.auth.LoginActivity;
+import com.fyp.faaiz.ets.drawer.NavigationDrawerFragment;
+import com.fyp.faaiz.ets.service.TrackerService;
 import com.fyp.faaiz.ets.session.Session;
 import com.fyp.faaiz.ets.tabs.TabsFragment;
 
@@ -43,9 +53,30 @@ public class MainActivity extends AppCompatActivity {
 
         // drawer
         setUpDrawer();
+
+        startService(new Intent(MainActivity.this,
+                TrackerService.class));
+        doBindService();
     }
 
-    @Override
+    private void doBindService() {
+        bindService(new Intent(this, TrackerService.class), mConnection,
+                Context.BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name,   IBinder service) {
+            Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+        @Override
     protected void onResume() {
         super.onResume();
         if (!_session.isUserLoggedIn()) {

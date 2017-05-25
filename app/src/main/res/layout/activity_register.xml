@@ -350,16 +350,37 @@
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/register_signup_btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:background="@drawable/botton_border"
-                        android:text="Sign Up"
-                        android:textAllCaps="false"
-                        android:textColor="#fff"
-                        android:textSize="18sp" />
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/register_signup_btn"
+                            android:layout_marginTop="18dp"
+                            android:background="@drawable/botton_border"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:elevation="1dp"
+                            android:text="Sign Up"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="18sp" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar_signup"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="13dp"
+                            android:layout_alignBottom="@+id/signin_button"
+                            android:layout_alignTop="@+id/signin_button"
+                            android:layout_centerHorizontal="true"
+                            android:elevation="2dp"
+                            android:indeterminateTint="@color/colorPrimary"
+                            android:visibility="invisible" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
             </RelativeLayout>

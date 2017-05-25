@@ -3,9 +3,7 @@ package com.fyp.faaiz.ets.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,13 +26,11 @@ import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.tabs.employee.EmployeeDetail;
-import com.fyp.faaiz.ets.utils.Parser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by zubairibrahim on 4/15/17.

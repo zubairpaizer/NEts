@@ -1,6 +1,4 @@
-package com.fyp.faaiz.ets.utils;
-
-import android.util.Log;
+package com.fyp.faaiz.ets.util;
 
 import com.fyp.faaiz.ets.model.Employee;
 
@@ -9,9 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.fyp.faaiz.ets.utils.Helpers.contains;
+import static com.fyp.faaiz.ets.util.Helpers.contains;
 
 /**
  * Created by zubair on 4/8/17.
