@@ -57,9 +57,10 @@ public class HomeTabsFragment extends Fragment {
 
     View _rootView;
     MapView mMapView;
-    private GoogleMap googleMap;
+
     public static final int ERROR_DIALOG_REQUEST = 9001;
     private GoogleApiClient mGoogleApiClient;
+    private GoogleMap googleMap;
     private LocationListener mLocationListener;
 
     public HomeTabsFragment() {
@@ -143,7 +144,6 @@ public class HomeTabsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (serviceOK()) {
-
 
             _rootView = inflater.inflate(R.layout.home_map, container, false);
             mMapView = (MapView) _rootView.findViewById(R.id.map);

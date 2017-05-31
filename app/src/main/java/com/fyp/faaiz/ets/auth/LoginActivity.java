@@ -31,6 +31,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fyp.faaiz.ets.AgentMainActivity;
 import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.R;
@@ -85,9 +86,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+        if (ApplicationState.REMOTE_DATABASE_ACTIVE) {
             URL_SEND = ApplicationState.REMOTE_BASE_URL + "/login/user";
-        }else{
+        } else {
             URL_SEND = ApplicationState.LOCAL_BASE_URL + "/Ets/" + table_radio + ".php";
         }
 
@@ -99,10 +100,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         owner_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+                if (isChecked) {
+                    if (ApplicationState.REMOTE_DATABASE_ACTIVE) {
                         URL_SEND = ApplicationState.REMOTE_BASE_URL + "/login/owner";
-                    }else{
+                    } else {
                         table_radio = "ets_owner_login";
                         URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
                     }
@@ -114,10 +115,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         user_radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+                if (isChecked) {
+                    if (ApplicationState.REMOTE_DATABASE_ACTIVE) {
                         URL_SEND = ApplicationState.REMOTE_BASE_URL + "/login/user";
-                    }else{
+                    } else {
                         table_radio = "ets_user_login";
                         URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/" + table_radio + ".php";
                     }
@@ -128,10 +129,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         // checking login
-        auth();
         init();
-        login_email.setFilters(new InputFilter[] { filter });
         auth();
+        login_email.setFilters(new InputFilter[]{filter});
         init();
         events();
     }
@@ -143,19 +143,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loginRequest() {
-        if (validate()){
+        if (validate()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 sigin_button.setEnabled(true);
                 sigin_button.setText("Sign In");
                 sigin_button.setBackground(getDrawable(R.drawable.botton_border));
-            }else{
+            } else {
                 Drawable button = getResources().getDrawable(R.drawable.botton_border);
                 sigin_button.setBackground(button);
             }
             sigin_button.setEnabled(true);
             sigin_button.setText("Sign In");
             return;
-        };
+        }
+        ;
         progressBar.setVisibility(View.VISIBLE);
         StringRequest request = new StringRequest(Request.Method.POST, URL_SEND, new Response.Listener<String>() {
             @Override
@@ -167,23 +168,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     int local_id = parse.get(0).getId();
 
-                    String local_full_name = parse.get(0).getFirst_name() + " " + parse.get(0).getFirst_name();
+                    String local_full_name = parse.get(0).getFirst_name() + " " + parse.get(0).getLast_name();
 
                     String local_email = parse.get(0).getEmail();
 
-                    _session.createLoginSession(local_id, local_full_name, local_email);
+                    Toast.makeText(LoginActivity.this, owner_radio.isChecked() + " / " + user_radio.isChecked() , Toast.LENGTH_SHORT).show();
 
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    if (owner_radio.isChecked()) {
+                        _session.createLoginSession(local_id, local_full_name, local_email,"owner");
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }else if(user_radio.isChecked()){
+                        _session.createLoginSession(local_id, local_full_name, local_email,"agent");
+                        Intent i = new Intent(LoginActivity.this, AgentMainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }else{
+                        Toast.makeText(LoginActivity.this, "Some thing went wrong", Toast.LENGTH_SHORT).show();
+                    }
 
-                    startActivity(i);
-
-                    finish();
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         sigin_button.setBackground(getDrawable(R.drawable.botton_border));
                         sigin_button.setEnabled(true);
                         sigin_button.setText("Sign In");
-                    }else{
+                    } else {
                         Drawable button = getResources().getDrawable(R.drawable.botton_border);
                         sigin_button.setBackground(button);
                         sigin_button.setEnabled(true);
@@ -202,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     sigin_button.setBackground(getDrawable(R.drawable.botton_border));
                     sigin_button.setEnabled(true);
                     sigin_button.setText("Sign In");
-                }else{
+                } else {
                     Drawable button = getResources().getDrawable(R.drawable.botton_border);
                     sigin_button.setBackground(button);
                     sigin_button.setEnabled(true);
@@ -320,11 +330,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void auth() {
         _session = new Session(getApplicationContext());
         if (_session.isUserLoggedIn()) {
-            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-            finish();
+            if(_session.getLoginVal().get(Session.LOGIN_VAL).equals("owner")){
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                finish();
+            }else if(_session.getLoginVal().get(Session.LOGIN_VAL).equals("agent")){
+                Intent i = new Intent(LoginActivity.this, AgentMainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                finish();
+            }else{
+                Toast.makeText(this, "some thing went wrong", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 

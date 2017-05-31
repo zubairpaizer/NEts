@@ -3,6 +3,8 @@ package com.fyp.faaiz.ets.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,54 +25,65 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fyp.faaiz.ets.ApplicationState;
-import com.fyp.faaiz.ets.EmployeeLocationDetails;
+import com.fyp.faaiz.ets.EmployeeLocationOnMap;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.model.Employee;
+import com.fyp.faaiz.ets.model.Location;
 import com.fyp.faaiz.ets.tabs.employee.EmployeeDetail;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
- * Created by zubairibrahim on 4/15/17.
+ * Created by zubairibrahim on 5/29/17.
  */
 
-public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
+public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MH> {
 
     Context myContext;
-    ArrayList<Employee> mdata;
+    ArrayList<Location> mdata;
+    FragmentManager fragmentManager;
 
-    public EmployeeAdapter(Context context, ArrayList<Employee> data) {
+    public LocationAdapter(Context context, ArrayList<Location> data, FragmentManager fragmentManager1) {
         this.myContext = context;
         this.mdata = data;
+        this.fragmentManager = fragmentManager1;
     }
 
     @Override
-    public MVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_list_item, parent, false);
-        MVH mvh = new MVH(v);
-        return mvh;
+    public MH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_location_item, parent, false);
+        MH mh = new MH(v);
+        return mh;
     }
 
     @Override
-    public void onBindViewHolder(MVH holder, final int position) {
-        holder.title.setText(mdata.get(position).getFullName());
-        holder.desc.setText(mdata.get(position).getEmail());
-
+    public void onBindViewHolder(MH holder, final int position) {
+        String sqlTime = mdata.get(position).getTime_at();
+        String date = sqlTime.substring(0, 10).replaceAll("-", "/");
+        String time = sqlTime.substring(10, 19);
+        final String td = "Time : " + time + "\nDate : " + date;
+        holder.title.setText(td);
+        holder.desc.setText(mdata.get(position).getLatitude() + " / " + mdata.get(position).getLangitude());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(myContext);
                 alertDialogBuilder.setTitle("Do you want to delete?");
                 alertDialogBuilder
                         .setCancelable(false)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                request(mdata.get(position).getId(),position);
-                                Toast.makeText(myContext, mdata.get(position).getId() + "A", Toast.LENGTH_SHORT).show();
+                                request(mdata.get(position).getUser_id(), position);
+                                Toast.makeText(myContext, mdata.get(position).getUser_id() + "A", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -78,7 +91,6 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
                                 dialog.cancel();
                             }
                         });
-
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
@@ -87,48 +99,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         holder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(myContext, EmployeeDetail.class);
-
-                int newId = (int) mdata.get(position).getId();
-                String fname = mdata.get(position).getFirst_name();
-                String lname = mdata.get(position).getLast_name();
-                String emailId = mdata.get(position).getEmail();
-                String mobile = mdata.get(position).getPhone_number();
-                String address = "Address .. .. ..";
-
-                String full_name = fname + " " + lname;
-                i.putExtra("empId", newId);
-                i.putExtra("name", full_name);
-                i.putExtra("emailId", emailId);
-                i.putExtra("address", address);
-                i.putExtra("mobile", mobile);
-
-                myContext.startActivity(i);
-                Toast.makeText(myContext, mdata.get(position).getId() + mdata.get(position).getFullName(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        holder.detail_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(myContext, EmployeeLocationDetails.class);
-
-                int newId = (int) mdata.get(position).getId();
-                String fname = mdata.get(position).getFirst_name();
-                String lname = mdata.get(position).getLast_name();
-                String emailId = mdata.get(position).getEmail();
-                String mobile = mdata.get(position).getPhone_number();
-                String address = "Address .. .. ..";
-
-                String full_name = fname + " " + lname;
-                i.putExtra("empId", newId);
-                i.putExtra("name", full_name);
-                i.putExtra("emailId", emailId);
-                i.putExtra("address", address);
-                i.putExtra("mobile", mobile);
-
-                myContext.startActivity(i);
-                Toast.makeText(myContext, mdata.get(position).getId() + mdata.get(position).getFullName(), Toast.LENGTH_SHORT).show();
+                EmployeeLocationOnMap m = EmployeeLocationOnMap.newInstance(mdata.get(position).getLatitude(), mdata.get(position).getLangitude(),td,mdata.get(position).getFullName());
+                m.show(fragmentManager, "FRAGMENT_DIALOG");
             }
         });
     }
@@ -138,35 +110,33 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         return mdata.size();
     }
 
-    class MVH extends RecyclerView.ViewHolder {
+    public class MH extends RecyclerView.ViewHolder {
+
         TextView title;
         TextView desc;
-        ImageView imageView;
         ImageView detail;
         ImageView delete;
-        ImageView detail_location;
 
-        public MVH(View itemView) {
+        public MH(View itemView) {
             super(itemView);
-            this.title = (TextView) itemView.findViewById(R.id.employee_name);
-            this.desc = (TextView) itemView.findViewById(R.id.employee_desc);
-            this.imageView = (ImageView) itemView.findViewById(R.id.employee_image);
-            this.delete = (ImageView) itemView.findViewById(R.id.delete_employee);
-            this.detail = (ImageView) itemView.findViewById(R.id.detail_employee);
-            this.detail_location = (ImageView) itemView.findViewById(R.id.detail_location);
+            this.title = (TextView) itemView.findViewById(R.id.location_name);
+            this.desc = (TextView) itemView.findViewById(R.id.location_desc);
+            this.detail = (ImageView) itemView.findViewById(R.id.location_detail);
+            this.delete = (ImageView) itemView.findViewById(R.id.delete_location);
         }
     }
 
     private void request(int id, final int index) {
-        final EmployeeAdapter t = this;
+        final LocationAdapter t = this;
         String URL_SEND = "";
-        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
-            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/employee/" + id;
-        }else{
-            URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/list_all_employees.php?id=" + id;
+
+        if (ApplicationState.REMOTE_DATABASE_ACTIVE) {
+            URL_SEND = ApplicationState.REMOTE_BASE_URL + "/location/" + id;
+        } else {
+            URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/location_delete.php?id=" + id;
         }
 
-        Toast.makeText(myContext,URL_SEND, Toast.LENGTH_SHORT).show();
+        Toast.makeText(myContext, URL_SEND, Toast.LENGTH_SHORT).show();
         StringRequest request = new StringRequest(Request.Method.DELETE, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

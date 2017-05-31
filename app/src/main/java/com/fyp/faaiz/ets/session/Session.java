@@ -14,7 +14,8 @@ public class Session {
     public static final String KEY_EMAIL = "email";
 
     // All Shared Preferences Keys
-    private static final String IS_USER_LOGIN = "isLoggedIn";
+    public static final String IS_USER_LOGIN = "isLoggedIn";
+    public static final String LOGIN_VAL = "LOGIN_VAL";
     // Shared Preferences reference
     SharedPreferences pref;
     // Editor reference for Shared preferences
@@ -30,7 +31,7 @@ public class Session {
     }
 
     //Create login session
-    public void createLoginSession(int id, String name, String email) {
+    public void createLoginSession(int id, String name, String email,String loginVal) {
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
         // Storing name in pref
@@ -39,6 +40,8 @@ public class Session {
         editor.putString(KEY_NAME, name);
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
+
+        editor.putString(LOGIN_VAL, loginVal);
 
         editor.commit();
     }
@@ -86,6 +89,16 @@ public class Session {
 
         return userid;
     }
+
+    public HashMap<String, String> getLoginVal() {
+
+        HashMap<String, String> loginVal = new HashMap<String, String>();
+
+        loginVal.put(LOGIN_VAL, pref.getString(LOGIN_VAL, null));
+
+        return loginVal;
+    }
+
 
     public void logoutUser() {
 

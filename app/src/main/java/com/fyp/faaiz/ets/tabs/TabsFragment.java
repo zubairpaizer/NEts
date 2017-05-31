@@ -24,8 +24,6 @@ public class TabsFragment extends FragmentStatePagerAdapter {
             case 0:
                 return new HomeTabsFragment();
             case 1:
-                return new LocationsTabsFragment();
-            case 2:
                 return new EmployeesTabsFragment();
             default:
                 break;
@@ -35,7 +33,7 @@ public class TabsFragment extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -44,8 +42,6 @@ public class TabsFragment extends FragmentStatePagerAdapter {
             case 0:
                 return "Home";
             case 1:
-                return "Locations";
-            case 2:
                 return "Employees";
             default:
                 break;

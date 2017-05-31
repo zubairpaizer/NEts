@@ -5,10 +5,11 @@
     android:background="@color/background"
     android:orientation="horizontal"
     android:padding="5dp"
-    tools:context="com.fyp.faaiz.ets.tabs.employee.EmployeesTabsFragment">
+    tools:context="com.fyp.faaiz.ets.EmployeeLocationDetails">>
 
+    <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.CardView
-        android:id="@+id/card"
+        android:id="@+id/card_eld"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
@@ -20,11 +21,11 @@
             android:padding="5dp">
 
             <ImageView
-                android:id="@+id/employee_image"
+                android:id="@+id/tracker_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_weight="0.2"
-                android:src="@drawable/employee"
+                android:src="@drawable/location_changes"
                 android:tint="@color/colorPrimary" />
 
             <LinearLayout
@@ -34,7 +35,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/employee_name"
+                    android:id="@+id/location_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Faaiz Hussain Zaidi"
@@ -43,7 +44,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/employee_desc"
+                    android:id="@+id/location_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
@@ -59,25 +60,16 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/detail_employee"
+                        android:id="@+id/location_detail"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="7dp"
                         android:contentDescription="@string/app_name"
-                        android:src="@drawable/list"
+                        android:src="@drawable/place"
                         android:tint="@color/black" />
 
                     <ImageView
-                        android:id="@+id/detail_location"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="7dp"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/location"
-                        android:tint="@color/black" />
-
-                    <ImageView
-                        android:id="@+id/delete_employee"
+                        android:id="@+id/delete_location"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="7dp"

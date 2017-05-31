@@ -1,5 +1,6 @@
 package com.fyp.faaiz.ets;
 
+import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,28 +56,32 @@ public class MainActivity extends AppCompatActivity {
         // drawer
         setUpDrawer();
 
+/*
         startService(new Intent(MainActivity.this,
                 TrackerService.class));
         doBindService();
+*/
     }
+    /*
 
-    private void doBindService() {
-        bindService(new Intent(this, TrackerService.class), mConnection,
-                Context.BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name,   IBinder service) {
-            Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+        private void doBindService() {
+            bindService(new Intent(this, TrackerService.class), mConnection,
+                    Context.BIND_AUTO_CREATE);
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
-        }
-    };
+        private ServiceConnection mConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name,   IBinder service) {
+                Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+    */
         @Override
     protected void onResume() {
         super.onResume();
@@ -137,5 +143,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

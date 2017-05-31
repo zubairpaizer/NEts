@@ -1,14 +1,20 @@
 package com.fyp.faaiz.ets.tabs.employee;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,8 +29,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fyp.faaiz.ets.ApplicationState;
+import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.adapter.EmployeeAdapter;
+import com.fyp.faaiz.ets.auth.LoginActivity;
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.util.Parser;
 
@@ -113,7 +121,51 @@ public class EmployeesTabsFragment extends Fragment implements SwipeRefreshLayou
                             }
         );
 
+        setHasOptionsMenu(true);
         return _rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) 	{
+        /*
+        getActivity().getMenuInflater().inflate(R.menu.owner, menu);
+
+        */
+
+    	super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.owner, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Toast.makeText(getActivity(), newText, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void request() {
