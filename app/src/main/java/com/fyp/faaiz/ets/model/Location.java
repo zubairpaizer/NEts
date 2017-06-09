@@ -7,6 +7,7 @@ package com.fyp.faaiz.ets.model;
 public class Location {
 
     public int location_id;
+    public String uuid;
     public int user_id;
     public String first_name;
     public String last_name;
@@ -22,8 +23,9 @@ public class Location {
 
     }
 
-    public Location(int location_id, int user_id, String first_name, String last_name, String email, String phone_number, String profile_image, String cnic, String langitude, String latitude, String time_at) {
+    public Location(int location_id, String uuid, int user_id, String first_name, String last_name, String email, String phone_number, String profile_image, String cnic, String langitude, String latitude, String time_at) {
         this.location_id = location_id;
+        this.uuid = uuid;
         this.user_id = user_id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -34,6 +36,14 @@ public class Location {
         this.langitude = langitude;
         this.latitude = latitude;
         this.time_at = time_at;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public int getLocation_id() {

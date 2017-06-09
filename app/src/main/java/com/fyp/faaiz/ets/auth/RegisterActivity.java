@@ -164,12 +164,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+
+        auth();
+        init();
+
         email.setFilters(new InputFilter[]{email_filter});
         first_name.setFilters(new InputFilter[]{email_filter, name_filter});
         last_name.setFilters(new InputFilter[]{email_filter, name_filter});
         phone.setFilters(new InputFilter[]{phone_filter});
-        auth();
-        init();
 
         cnic.addTextChangedListener(new TextWatcher() {
             @Override

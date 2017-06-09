@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceFragment;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.fyp.faaiz.ets.auth.LoginActivity;
 import com.fyp.faaiz.ets.drawer.NavigationDrawerFragment;
 import com.fyp.faaiz.ets.service.TrackerService;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     DrawerLayout drawerLayout;
     Session _session;
+    Firebase firebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.owner, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -138,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 }
-
+            case R.id.setting:
+                Intent settingIntent = new Intent(this, SettingPref.class);
+                startActivity(settingIntent);
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);

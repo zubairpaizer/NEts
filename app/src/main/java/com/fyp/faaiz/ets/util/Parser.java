@@ -22,7 +22,7 @@ public class Parser {
     public static ArrayList<Employee> parse(String response) {
 
         ArrayList<Employee> employees = new ArrayList<>();
-        String first_name, last_name, email, profile_image, phone_number, cnic = "";
+        String uuid,first_name, last_name, email, profile_image, phone_number, cnic = "";
         int id = 0;
 
         try {
@@ -35,6 +35,11 @@ public class Parser {
                 if (contains(jsonObject, "id")) {
                     id = jsonObject.getInt("id");
                     employee.setId(id);
+                }
+
+                if (contains(jsonObject, "uuid")) {
+                    uuid = jsonObject.getString("uuid");
+                    employee.setUuid(uuid);
                 }
 
                 if (contains(jsonObject, "first_name")) {

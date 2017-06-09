@@ -172,15 +172,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     String local_email = parse.get(0).getEmail();
 
+                    String uuid = parse.get(0).getUuid();
+
+                    Toast.makeText(LoginActivity.this, uuid, Toast.LENGTH_SHORT).show();
+
                     Toast.makeText(LoginActivity.this, owner_radio.isChecked() + " / " + user_radio.isChecked() , Toast.LENGTH_SHORT).show();
 
                     if (owner_radio.isChecked()) {
-                        _session.createLoginSession(local_id, local_full_name, local_email,"owner");
+                        _session.createLoginSession(local_id, local_full_name, local_email,"owner",uuid);
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(i);
                         finish();
                     }else if(user_radio.isChecked()){
-                        _session.createLoginSession(local_id, local_full_name, local_email,"agent");
+                        _session.createLoginSession(local_id, local_full_name, local_email,"agent",uuid);
                         Intent i = new Intent(LoginActivity.this, AgentMainActivity.class);
                         startActivity(i);
                         finish();

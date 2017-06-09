@@ -35,6 +35,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.Firebase;
 import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.auth.LoginActivity;
@@ -77,10 +78,10 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
     private GoogleApiClient mGoogleApiClient;
     private LocationListener mLocationListener;
     private Location mLastReportedLocation;
-
+    Session _session;
     ArrayList<Messenger> mClients = new ArrayList<>();
     final Messenger mMessenger = new Messenger(new IncomingHandler());
-
+    Firebase firebase;
     static final int MSG_REGISTER_CLIENT = 1;
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_LOG_RING = 4;
@@ -95,9 +96,14 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
 
     @Override
     public void onCreate() {
+        _session = new Session(getApplicationContext());
         // Check whether Google Play Services is installed
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int isAvailable = apiAvailability.isGooglePlayServicesAvailable(getApplicationContext());
+        String fire_uuid = _session.getUserDetails().get(Session.UUID);
+
+        firebase = new Firebase("https://nets-8cb47.firebaseio.com/employees/" + fire_uuid);
+
         if (isAvailable == ConnectionResult.SUCCESS) {
             mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                     .addApi(LocationServices.API)
@@ -304,6 +310,18 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
                         return params;
                     }
                 };
+
+                //firebase location save
+                String fire_email = _session.getUserDetails().get(Session.KEY_EMAIL);
+                int fire_id = _session.getId().get(Session.KEY_ID);
+                Firebase femail = firebase.child("email");
+                Firebase fuId = firebase.child("user_id");
+                Firebase flongitude = firebase.child("location/longitude");
+                Firebase flatitude = firebase.child("location/latitude");
+                femail.setValue(fire_email);
+                fuId.setValue(fire_id);
+                flongitude.setValue(longitude);
+                flatitude.setValue(latitude);
 
                 RequestQueue queue = Volley.newRequestQueue(getApplication());
                 queue.add(locationRequest);

@@ -12,6 +12,7 @@ public class Session {
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
+    public static final String UUID = "uuid";
 
     // All Shared Preferences Keys
     public static final String IS_USER_LOGIN = "isLoggedIn";
@@ -31,7 +32,7 @@ public class Session {
     }
 
     //Create login session
-    public void createLoginSession(int id, String name, String email,String loginVal) {
+    public void createLoginSession(int id, String name, String email,String loginVal,String uuid) {
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
         // Storing name in pref
@@ -40,6 +41,8 @@ public class Session {
         editor.putString(KEY_NAME, name);
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
+
+        editor.putString(UUID, uuid);
 
         editor.putString(LOGIN_VAL, loginVal);
 
@@ -77,6 +80,9 @@ public class Session {
 
         // user email id
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
+
+        //uuid
+        user.put(UUID, pref.getString(UUID, null));
 
         return user;
     }

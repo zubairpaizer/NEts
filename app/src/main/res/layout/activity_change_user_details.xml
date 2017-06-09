@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:background="#eee"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/profile_avatar"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_centerHorizontal="true"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/profile"/>
+
+                <ImageView
+                    android:id="@+id/profile_camera"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#fff"
+                    android:padding="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="80dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/camera"/>
+
+                <ImageView
+                    android:id="@+id/profile_lock_unlock_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/profile_lock"
+                    android:layout_marginBottom="12dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="10dp"
+                    android:textColor="#555"
+                    android:textSize="8dp"
+                    android:layout_alignParentRight="true"
+                    android:text="Enable Edit"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/login_title"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="#eee"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="42dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/firstname" />
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                app:passwordToggleEnabled="true">
+
+                                <EditText
+                                    android:id="@+id/profile_first_name"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="16dp"
+                                    android:drawablePadding="10dp"
+                                    android:hint="First Name"
+                                    android:inputType="textPersonName"
+                                    android:singleLine="true" />
+
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="42dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/lastname" />
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                app:passwordToggleEnabled="true">
+
+                                <EditText
+                                    android:id="@+id/profile_last_name"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:enabled="false"
+                                    android:layout_marginTop="16dp"
+                                    android:drawablePadding="10dp"
+                                    android:hint="Last Name"
+                                    android:inputType="textPersonName"
+                                    android:singleLine="true" />
+
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+<!--
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/email" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            app:passwordToggleEnabled="true">
+
+                            <EditText
+                                android:id="@+id/profile_email"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:drawablePadding="10dp"
+                                android:hint="Email"
+                                android:enabled="false"
+                                android:inputType="textEmailAddress"
+                                android:singleLine="true" />
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/phone" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            app:passwordToggleEnabled="true">
+
+                            <EditText
+                                android:id="@+id/profile_phone_number"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:drawablePadding="10dp"
+                                android:enabled="false"
+                                android:hint="Phone Number"
+                                android:inputType="phone"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/profile_phone_number_count"
+                                android:layout_width="fill_parent"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:layout_height="wrap_content"
+                                android:inputType="phone" />
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/cnic" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            app:passwordToggleEnabled="true">
+
+                            <EditText
+                                android:id="@+id/profile_cnic"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:drawablePadding="10dp"
+                                android:hint="CNIC"
+                                android:inputType="number"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/profile_cnic_count"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:focusableInTouchMode="false"
+                                android:focusable="false"
+                                android:inputType="phone" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_alignParentRight="true"
+                            android:textColor="@color/md_red_500_75"
+                            android:layout_width="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:layout_height="wrap_content"
+                            android:text="Change Password"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/profile_update_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_marginTop="18dp"
+                            android:background="@drawable/botton_border"
+                            android:elevation="1dp"
+                            android:text="Update Profile"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="18sp" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar_update"
+                            style="?android:attr/progressBarStyleSmall"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_alignBottom="@+id/signin_button"
+                            android:layout_alignTop="@+id/signin_button"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="13dp"
+                            android:elevation="2dp"
+                            android:indeterminateTint="@color/colorPrimary"
+                            android:visibility="invisible" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>
