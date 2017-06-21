@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,9 +42,12 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.firebase.client.Firebase;
 import com.fyp.faaiz.ets.session.Session;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -52,6 +57,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Hashtable;
@@ -60,6 +67,8 @@ import java.util.Map;
 public class ChangeUserDetails extends AppCompatActivity {
 
     StorageReference mStorage;
+    StorageReference mRStorage;
+    FirebaseStorage firebaseStorage;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     public static final int CAPTURE_IMAGE = 2;
@@ -100,6 +109,8 @@ public class ChangeUserDetails extends AppCompatActivity {
     ProgressBar progressBar_update;
     public static int USER_ID = 0;
     public static String USER_UUID = "";
+
+    public static String BASE_IMAGE = "https://firebasestorage.googleapis.com/v0/b/nets-8cb47.appspot.com/o/Photos%2F";
 
     private InputFilter email_filter = new InputFilter() {
 
@@ -156,10 +167,11 @@ public class ChangeUserDetails extends AppCompatActivity {
         Toast.makeText(this, URL_REQUEST, Toast.LENGTH_LONG).show();
 
         USER_UUID = session.getUserDetails().get(Session.UUID);
-
+        BASE_IMAGE += USER_UUID + "?alt=media";
+        Log.d("BASE", BASE_IMAGE);
+        firebaseStorage = FirebaseStorage.getInstance();
         mStorage = FirebaseStorage.getInstance().getReference();
 
-        Toast.makeText(this, USER_ID + "", Toast.LENGTH_SHORT).show();
         profile_update_button = (Button) findViewById(R.id.profile_update_button);
         progressBar_update = (ProgressBar) findViewById(R.id.progressBar_update);
         profile_first_name = (EditText) findViewById(R.id.profile_first_name);
@@ -170,6 +182,12 @@ public class ChangeUserDetails extends AppCompatActivity {
         profile_camera = (ImageView) findViewById(R.id.profile_camera);
         profile_avatar = (ImageView) findViewById(R.id.profile_avatar);
         profile_phone_number_count = (TextView) findViewById(R.id.profile_phone_number_count);
+
+        try {
+            Glide.with(this).load(BASE_IMAGE).into(profile_avatar);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
         profile_first_name.setEnabled(false);
         profile_last_name.setEnabled(false);

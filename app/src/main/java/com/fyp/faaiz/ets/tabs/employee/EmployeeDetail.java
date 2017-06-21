@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.fyp.faaiz.ets.ChangeUserDetails;
 import com.fyp.faaiz.ets.R;
 
 public class EmployeeDetail extends AppCompatActivity {
@@ -19,6 +21,7 @@ public class EmployeeDetail extends AppCompatActivity {
     TextView name_tv;
     ImageView iv_call;
     ImageView iv_email;
+    ImageView emp_profile_pic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +32,22 @@ public class EmployeeDetail extends AppCompatActivity {
         name_tv = (TextView) findViewById(R.id.employee_name);
         iv_call = (ImageView) findViewById(R.id.user_phone);
         iv_email = (ImageView) findViewById(R.id.user_email);
+        emp_profile_pic = (ImageView) findViewById(R.id.emp_profile_pic);
 
-        //String empID = getIntent().getExtras().get("empId").toString();
+
+        String uuid = getIntent().getExtras().get("uuid").toString();
         final String name = getIntent().getExtras().get("name").toString();
         final String empEmail = getIntent().getExtras().get("emailId").toString();
         //final String address = getIntent().getExtras().get("address").toString();
         final String mobile = getIntent().getExtras().get("mobile").toString();
+        String BASE_IMAGE = ChangeUserDetails.BASE_IMAGE + uuid + "?alt=media";
+
+        try {
+            Glide.with(this).load(BASE_IMAGE).into(emp_profile_pic);
+            //Glide.with(this).load(BASE_IMAGE).placeholder(R.drawable.profile).dontAnimate().into(emp_profile_pic);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
         name_tv.setText(name);
         mobile_tv.setText(mobile);

@@ -90,6 +90,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
                 Intent i = new Intent(myContext, EmployeeDetail.class);
 
                 int newId = (int) mdata.get(position).getId();
+                String uuid = mdata.get(position).getUuid();
                 String fname = mdata.get(position).getFirst_name();
                 String lname = mdata.get(position).getLast_name();
                 String emailId = mdata.get(position).getEmail();
@@ -98,6 +99,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
 
                 String full_name = fname + " " + lname;
                 i.putExtra("empId", newId);
+                i.putExtra("uuid", uuid);
                 i.putExtra("name", full_name);
                 i.putExtra("emailId", emailId);
                 i.putExtra("address", address);
@@ -114,6 +116,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
                 Intent i = new Intent(myContext, EmployeeLocationDetails.class);
 
                 int newId = (int) mdata.get(position).getId();
+                String uuid = mdata.get(position).getUuid();
                 String fname = mdata.get(position).getFirst_name();
                 String lname = mdata.get(position).getLast_name();
                 String emailId = mdata.get(position).getEmail();
