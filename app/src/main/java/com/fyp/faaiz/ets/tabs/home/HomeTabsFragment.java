@@ -12,12 +12,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.fyp.faaiz.ets.R;
+import com.fyp.faaiz.ets.model.FBRoot;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -34,6 +37,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +56,7 @@ public class HomeTabsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "HOMETABS";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -62,15 +71,61 @@ public class HomeTabsFragment extends Fragment {
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap googleMap;
     private LocationListener mLocationListener;
+    private DatabaseReference mDatabase;
+    private DatabaseReference mPostReference;
+    private ValueEventListener mPostListener;
 
     public HomeTabsFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (mPostListener != null) {
+            mPostReference.removeEventListener(mPostListener);
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 //        mGoogleApiClient.connect();
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                googleMap.clear();
+                try {
+                    for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                        //FBRoot fbRoot = locationSnapshot.getValue(FBRoot.class);
+                        String email = locationSnapshot.child("email").getValue().toString();
+                        String user_id = locationSnapshot.child("user_id").getValue().toString();
+                        double latitude = Double.valueOf(locationSnapshot.child("location").child("latitude").getValue().toString());
+                        double longitude = Double.valueOf(locationSnapshot.child("location").child("longitude").getValue().toString());
+                        Toast.makeText(getActivity(), latitude + "\n" + longitude + "", Toast.LENGTH_SHORT).show();
+
+                        LatLng userLocation = new LatLng(latitude, longitude);
+                        googleMap.addMarker(new MarkerOptions().position(userLocation).title(email).snippet(user_id));
+                        //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15).build();
+                        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Toast.makeText(getActivity(), "Failed to load locations.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        mPostReference.addValueEventListener(listener);
+        mPostListener = listener;
     }
 
     /**
@@ -95,7 +150,8 @@ public class HomeTabsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkPermission();
-
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://nets-8cb47.firebaseio.com/employees");
+        mPostReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://nets-8cb47.firebaseio.com/employees");
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API)
                 .build();
