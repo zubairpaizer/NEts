@@ -8,4 +8,7 @@
     <string name="open">Open</string>
     <string name="GOOGLE_MAP_API_KEY">AIzaSyDH8zCF3KtNYMSfF9Kfk1lA1mLMP8UO8wU</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, aliquid assumenda atque blanditiis commodi dolore error id illum in itaque laudantium molestias mollitia, necessitatibus nemo nulla provident quia quod vero.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Forgot Password</string>
 </resources>

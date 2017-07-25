@@ -35,6 +35,7 @@ import com.fyp.faaiz.ets.AgentMainActivity;
 import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.R;
+import com.fyp.faaiz.ets.fragment.ForgotPassword_Login;
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.session.Session;
 import com.fyp.faaiz.ets.util.Parser;
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button sigin_button;
     Session _session;
     ProgressBar progressBar;
+    TextView forgot_password;
 
     AppCompatRadioButton owner_radio;
     AppCompatRadioButton user_radio;
@@ -91,6 +93,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             URL_SEND = ApplicationState.LOCAL_BASE_URL + "/Ets/" + table_radio + ".php";
         }
+
+        forgot_password = (TextView) findViewById(R.id.forgot_password);
+
+
+        forgot_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ForgotPassword_Login fpl = ForgotPassword_Login.newInstance("","");
+                fpl.show(getSupportFragmentManager(),"FORGOTPASSWORD FRAGMENT");
+            }
+        });
 
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
