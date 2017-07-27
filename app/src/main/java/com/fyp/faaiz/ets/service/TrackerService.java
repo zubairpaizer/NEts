@@ -155,14 +155,14 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
                 .build();
     }
 
-    private LocationRequest createLocationRequest() {
+/*    private LocationRequest createLocationRequest() {
         return new LocationRequest()
-                .setInterval(1 * 1000)
-                .setFastestInterval(5000)
+                .setInterval(1 * 5000)
+                .setFastestInterval(50000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
+    }*/
 
-    private void showNotification() {
+/*    private void showNotification() {
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
 
@@ -187,8 +187,9 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, n);
-    }
+    }*/
 
+/*
     private void updateNotification(String text) {
         if (nm != null) {
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -197,6 +198,7 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
             nm.notify(1, notification);
         }
     }
+*/
 
     private String getDeviceId() {
         return Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -216,8 +218,8 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
         return info;
     }
 
-    public void sendLocation(Location location) {
-    }
+/*    public void sendLocation(Location location) {
+    }*/
 
 /*    @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -330,8 +332,8 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
 
         LocationRequest request = LocationRequest.create();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        request.setInterval(5000);
-        request.setFastestInterval(1000);
+        request.setInterval(30000);
+        request.setFastestInterval(30000);
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
             return;
