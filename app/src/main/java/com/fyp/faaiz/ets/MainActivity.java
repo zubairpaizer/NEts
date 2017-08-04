@@ -138,14 +138,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.logout:
                 if (_session.isUserLoggedIn()) {
                     _session.logoutUser();
+                    if(TrackerService.isRunning()){
+                        TrackerService t = new TrackerService();
+                        stopService(new Intent(MainActivity.this,TrackerService.class));
+                        //t.
+                    }
                     Intent i = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(i);
                     finish();
                 }
-            case R.id.setting:
+/*            case R.id
+                    .setting:
                 Intent settingIntent = new Intent(this, SettingPref.class);
                 startActivity(settingIntent);
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();*/
         }
         return super.onOptionsItemSelected(item);
     }

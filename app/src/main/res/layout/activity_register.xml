@@ -242,6 +242,9 @@
                                 android:id="@+id/register_phone_number_count"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:focusableInTouchMode="false"
+                                android:focusable="false"
                                 android:inputType="phone"/>
 
                         </android.support.design.widget.TextInputLayout>
@@ -281,6 +284,9 @@
                                 android:id="@+id/register_cnic_count"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:focusableInTouchMode="false"
+                                android:focusable="false"
                                 android:inputType="phone"/>
 
                         </android.support.design.widget.TextInputLayout>

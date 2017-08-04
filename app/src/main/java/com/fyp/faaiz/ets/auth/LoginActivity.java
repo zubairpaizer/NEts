@@ -37,12 +37,14 @@ import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.R;
 import com.fyp.faaiz.ets.fragment.ForgotPassword_Login;
 import com.fyp.faaiz.ets.model.Employee;
+import com.fyp.faaiz.ets.model.MessageCode;
 import com.fyp.faaiz.ets.session.Session;
 import com.fyp.faaiz.ets.util.Parser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,6 +177,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(String response) {
                 Log.d("Response", response);
+
+
+
+                if(response.contains("message") && response.contains("code")){
+                    MessageCode m = Parser.messageCodes(response);
+                    Toast.makeText(LoginActivity.this, m.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 if (response.contains("first_name")) {
 
                     List<Employee> parse = Parser.parse(response);
@@ -186,18 +199,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     String local_email = parse.get(0).getEmail();
 
                     String uuid = parse.get(0).getUuid();
+                    String first_name_n = parse.get(0).getFirst_name();
+                    String last_name = parse.get(0).getLast_name();
+                    String cnic = parse.get(0).getCnic();
+                    String phone = parse.get(0).getPhone_number();
+
+                    Toast.makeText(LoginActivity.this, "CNIC" + cnic, Toast.LENGTH_SHORT).show();
 
                     Toast.makeText(LoginActivity.this, uuid, Toast.LENGTH_SHORT).show();
 
                     Toast.makeText(LoginActivity.this, owner_radio.isChecked() + " / " + user_radio.isChecked() , Toast.LENGTH_SHORT).show();
 
                     if (owner_radio.isChecked()) {
-                        _session.createLoginSession(local_id, local_full_name, local_email,"owner",uuid);
+                        _session.createLoginSession(local_id, local_full_name, local_email,"owner",uuid,first_name_n,last_name,cnic,phone);
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(i);
                         finish();
                     }else if(user_radio.isChecked()){
-                        _session.createLoginSession(local_id, local_full_name, local_email,"agent",uuid);
+                        _session.createLoginSession(local_id, local_full_name, local_email,"agent",uuid,first_name_n,last_name,cnic,phone);
                         Intent i = new Intent(LoginActivity.this, AgentMainActivity.class);
                         startActivity(i);
                         finish();
@@ -236,7 +255,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     sigin_button.setText("Sign In");
                 }
                 NetworkResponse networkResponse = volleyError.networkResponse;
-                String errorMessage = "Unknown error";
+                String errorMessage = "Invalid Email/Password";
                 if (networkResponse == null) {
                     if (volleyError.getClass().equals(TimeoutError.class)) {
                         errorMessage = "Request timeout";

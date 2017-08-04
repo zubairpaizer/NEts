@@ -121,7 +121,7 @@ public class EmployeesTabsFragment extends Fragment implements SwipeRefreshLayou
                             }
         );
 
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         return _rootView;
     }
 

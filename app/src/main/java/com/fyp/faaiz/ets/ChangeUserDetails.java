@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -44,7 +45,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.firebase.client.Firebase;
+import com.fyp.faaiz.ets.auth.LoginActivity;
+import com.fyp.faaiz.ets.model.Employee;
+import com.fyp.faaiz.ets.model.MessageCode;
 import com.fyp.faaiz.ets.session.Session;
+import com.fyp.faaiz.ets.util.Parser;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -62,6 +67,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public class ChangeUserDetails extends AppCompatActivity {
@@ -201,6 +207,19 @@ public class ChangeUserDetails extends AppCompatActivity {
         profile_phone.setFilters(new InputFilter[]{phone_filter});
 
 
+        String first_name = session.getUserDetails().get(Session.FIRST_NAME) != null ? session.getUserDetails().get(Session.FIRST_NAME) : "";
+        String last_name = session.getUserDetails().get(Session.LAST_NAME) != null ? session.getUserDetails().get(Session.LAST_NAME) : "";
+        String cnic = session.getUserDetails().get(Session.CNIC) != null ? session.getUserDetails().get(Session.CNIC) : "";
+        String phone = session.getUserDetails().get(Session.PHONE) != null ? session.getUserDetails().get(Session.PHONE) : "";
+
+        Toast.makeText(this, session.getUserDetails().get(Session.FIRST_NAME), Toast.LENGTH_SHORT).show();
+
+        profile_first_name.setText(first_name);
+        profile_last_name.setText(last_name);
+        profile_phone.setText(phone);
+        profile_cnic.setText(cnic);
+
+
         profile_lock_unlock_btn = (ImageView) findViewById(R.id.profile_lock_unlock_btn);
         profile_lock_unlock_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,14 +311,16 @@ public class ChangeUserDetails extends AppCompatActivity {
             public void onClick(View v) {
                 showProgressDialog();
                 StorageReference file = mStorage.child("Photos").child(USER_UUID);
-                file.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        hideProgressDialog();
-                        Toast.makeText(ChangeUserDetails.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                    if(filePath != null) {
+                        file.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                hideProgressDialog();
+                                Toast.makeText(ChangeUserDetails.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                });
                 updateProfile();
             }
         });
@@ -414,15 +435,53 @@ public class ChangeUserDetails extends AppCompatActivity {
 
     private void updateProfile() {
         showProgressDialog();
-        StringRequest request = new StringRequest(Request.Method.PATCH, "https://nets.herokuapp.com/employee/55",
+        int id = _session.getId().get(Session.KEY_ID);
+        String URL = ApplicationState.REMOTE_BASE_URL + "/employee/" + id;
+
+        StringRequest request = new StringRequest(Request.Method.PATCH, URL,
                 new Response.Listener<String>() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
-                    public void onResponse(String s) {
-                        Toast.makeText(ChangeUserDetails.this, s, Toast.LENGTH_SHORT).show();
-                        hideProgressDialog();
-                        startActivity(new Intent(getBaseContext(), ChangeUserDetails.class));
-                        finish();
+                    public void onResponse(String response) {
+
+                        if(response.contains("message") && response.contains("code")){
+                            MessageCode m = Parser.messageCodes(response);
+                            Toast.makeText(ChangeUserDetails.this, m.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+
+                        if (response.contains("first_name")) {
+
+                            _session.logoutUser();
+
+                            List<Employee> parse = Parser.parse(response);
+
+                            int local_id = parse.get(0).getId();
+
+                            String local_full_name = parse.get(0).getFirst_name() + " " + parse.get(0).getLast_name();
+
+                            String local_email = parse.get(0).getEmail();
+
+                            String uuid = parse.get(0).getUuid();
+                            String first_name_n = parse.get(0).getFirst_name();
+                            String last_name = parse.get(0).getLast_name();
+                            String cnic = parse.get(0).getCnic();
+                            String phone = parse.get(0).getPhone_number();
+
+                            _session.createLoginSession(local_id, local_full_name, local_email,"agent",uuid,first_name_n,last_name,cnic,phone);
+
+                            Toast.makeText(ChangeUserDetails.this, response, Toast.LENGTH_SHORT).show();
+                            hideProgressDialog();
+                            startActivity(new Intent(getBaseContext(), ChangeUserDetails.class));
+                            finish();
+
+                        } else {
+                            Toast.makeText(ChangeUserDetails.this, "Some thing went wrong", Toast.LENGTH_SHORT).show();
+                        }
+
+
                     }
                 },
                 new Response.ErrorListener() {

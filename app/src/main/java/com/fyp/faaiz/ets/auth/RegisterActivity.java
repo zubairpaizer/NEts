@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.text.Editable;
@@ -30,8 +31,11 @@ import com.android.volley.toolbox.Volley;
 import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.MainActivity;
 import com.fyp.faaiz.ets.R;
+import com.fyp.faaiz.ets.model.MessageCode;
 import com.fyp.faaiz.ets.session.Session;
+import com.fyp.faaiz.ets.util.Parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -269,11 +273,26 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void registerRequest() {
         progressBar.setVisibility(View.VISIBLE);
         StringRequest request = new StringRequest(Request.Method.POST, URL_SEND, new Response.Listener<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onResponse(String response) {
                 //Log.d("RESPONSE", response);
-                Toast.makeText(RegisterActivity.this, response + URL_SEND, Toast.LENGTH_SHORT).show();
-                if (response.contains("message")) {
+                if(response.contains("message") && response.contains("code")){
+                    MessageCode m = Parser.messageCodes(response);
+                    if(m.getCode().equals("23505")){
+                        Toast.makeText(RegisterActivity.this, m.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        signup.setBackground(getDrawable(R.drawable.botton_border));
+                        signup.setEnabled(true);
+                        signup.setText("Sign Up");
+                        return;
+                    }
+                }
+
+
+                if (response.contains("message") && response.contains("code")) {
+                    MessageCode m = Parser.messageCodes(response);
+                    Toast.makeText(RegisterActivity.this, m.getMessage(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(i);
                     finish();

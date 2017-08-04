@@ -11,6 +11,10 @@ public class Session {
     /* CONSTANTS */
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String CNIC = "cnic";
+    public static final String PHONE = "phone";
     public static final String KEY_EMAIL = "email";
     public static final String UUID = "uuid";
 
@@ -32,13 +36,19 @@ public class Session {
     }
 
     //Create login session
-    public void createLoginSession(int id, String name, String email,String loginVal,String uuid) {
+    public void createLoginSession(int id, String name, String email,String loginVal,String uuid,String first_name,String last_ame, String cnic, String phone) {
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
         // Storing name in pref
         editor.putInt(KEY_ID, id);
         // Storing name in pref
         editor.putString(KEY_NAME, name);
+
+        editor.putString(FIRST_NAME, first_name);
+        editor.putString(LAST_NAME, last_ame);
+        editor.putString(CNIC, cnic);
+        editor.putString(PHONE, phone);
+
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
 
@@ -77,6 +87,11 @@ public class Session {
 
         // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
+
+        user.put(FIRST_NAME, pref.getString(FIRST_NAME, null));
+        user.put(LAST_NAME, pref.getString(LAST_NAME, null));
+        user.put(CNIC, pref.getString(CNIC, null));
+        user.put(PHONE, pref.getString(PHONE, null));
 
         // user email id
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));

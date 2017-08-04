@@ -164,6 +164,11 @@ public class AgentMainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logout:
                 if (_session.isUserLoggedIn()) {
+                    if(TrackerService.isRunning()){
+                        TrackerService t = new TrackerService();
+                        stopService(new Intent(AgentMainActivity.this,TrackerService.class));
+                        //t.
+                    }
                     _session.logoutUser();
                     Intent i = new Intent(AgentMainActivity.this, LoginActivity.class);
                     startActivity(i);

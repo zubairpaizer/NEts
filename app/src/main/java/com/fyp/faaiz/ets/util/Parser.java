@@ -2,6 +2,7 @@ package com.fyp.faaiz.ets.util;
 
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.model.Location;
+import com.fyp.faaiz.ets.model.MessageCode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,4 +172,38 @@ public class Parser {
 
         return null;
     }
+
+    public static MessageCode messageCodes(String response){
+        // ArrayList<MessageCode> messagecodes = new ArrayList<>();
+
+        String message = "";
+        String code = "";
+
+        try {
+/*            JSONArray obj = new JSONArray(response);
+            for (int i = 0; i < obj.length(); i++) {*/
+
+                MessageCode messageCode = new MessageCode();
+                JSONObject jsonObject = new JSONObject(response); //obj.getJSONObject(i);
+
+                if (contains(jsonObject, "message")) {
+                    message = jsonObject.getString("message");
+                    messageCode.setMessage(message);
+                }
+
+                if (contains(jsonObject, "code")) {
+                    code = jsonObject.getString("code");
+                    messageCode.setCode(code);
+                }
+
+            //    messagecodes.add(messageCode);
+           // }
+            return messageCode;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
