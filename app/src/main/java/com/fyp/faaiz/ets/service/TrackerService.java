@@ -51,6 +51,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -86,6 +93,10 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_LOG_RING = 4;
 
+    private DatabaseReference mDatabase;
+    private DatabaseReference mPostReference;
+    private ValueEventListener mPostListener;
+
     public TrackerService() {
     }
 
@@ -102,7 +113,12 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
         int isAvailable = apiAvailability.isGooglePlayServicesAvailable(getApplicationContext());
         String fire_uuid = _session.getUserDetails().get(Session.UUID);
 
+        Toast.makeText(getApplicationContext(), fire_uuid, Toast.LENGTH_SHORT).show();
+
         firebase = new Firebase("https://nets-8cb47.firebaseio.com/employees/" + fire_uuid);
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://nets-8cb47.firebaseio.com/employees");
+        //mDatabase.child(fire_uuid);
+        mPostReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://nets-8cb47.firebaseio.com/employees/" + fire_uuid);
 
         if (isAvailable == ConnectionResult.SUCCESS) {
             mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
@@ -124,6 +140,15 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
     }
 
     @Override
+    public boolean stopService(Intent name) {
+        // Remove post value event listener
+        if (mPostListener != null) {
+            mPostReference.removeEventListener(mPostListener);
+        }
+        return super.stopService(name);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         /* kill persistent notification */
@@ -140,6 +165,32 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    String interval = dataSnapshot.child("tracking_interval").getValue().toString();
+                    _session.setInterval(interval);
+                    //Toast.makeText(TrackerService.this, _session.getUserDetails().get(Session.TRACKING_INTERVAL), Toast.LENGTH_SHORT).show();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    _session.setInterval("30000");
+                    //Toast.makeText(getApplicationContext(), ex.getMessage() + _session.getUserDetails().get(Session.TRACKING_INTERVAL), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Toast.makeText(getApplicationContext(), "Failed to load locations.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        mPostReference.addValueEventListener(listener);
+        mPostListener = listener;
+
         return START_STICKY;
     }
 
@@ -332,8 +383,16 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
 
         LocationRequest request = LocationRequest.create();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        request.setInterval(30000);
-        request.setFastestInterval(30000);
+        int interval = 30000;
+        try {
+            interval = Integer.valueOf(_session.getUserDetails().get(Session.TRACKING_INTERVAL));
+        }catch (Exception ex){
+            ex.printStackTrace();
+            interval = 30000;
+        }
+
+        request.setInterval(interval);
+        request.setFastestInterval(interval);
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
             return;

@@ -58,6 +58,16 @@
                     android:layout_gravity="right"
                     android:orientation="horizontal">
 
+
+                    <ImageView
+                        android:id="@+id/timer_employee"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="7dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/timer"
+                        android:tint="@color/black" />
+
                     <ImageView
                         android:id="@+id/detail_employee"
                         android:layout_width="25dp"

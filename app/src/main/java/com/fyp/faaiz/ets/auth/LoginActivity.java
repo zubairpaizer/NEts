@@ -211,12 +211,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(LoginActivity.this, owner_radio.isChecked() + " / " + user_radio.isChecked() , Toast.LENGTH_SHORT).show();
 
                     if (owner_radio.isChecked()) {
-                        _session.createLoginSession(local_id, local_full_name, local_email,"owner",uuid,first_name_n,last_name,cnic,phone);
+                        _session.createLoginSession(local_id, local_full_name, local_email,"owner",uuid,first_name_n,last_name,cnic,phone,"300000");
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(i);
                         finish();
                     }else if(user_radio.isChecked()){
-                        _session.createLoginSession(local_id, local_full_name, local_email,"agent",uuid,first_name_n,last_name,cnic,phone);
+                        _session.createLoginSession(local_id, local_full_name, local_email,"agent",uuid,first_name_n,last_name,cnic,phone, "300000");
                         Intent i = new Intent(LoginActivity.this, AgentMainActivity.class);
                         startActivity(i);
                         finish();

@@ -3,6 +3,9 @@ package com.fyp.faaiz.ets.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.fyp.faaiz.ets.ApplicationState;
 import com.fyp.faaiz.ets.EmployeeLocationDetails;
 import com.fyp.faaiz.ets.R;
+import com.fyp.faaiz.ets.fragment.TimerFragment;
 import com.fyp.faaiz.ets.model.Employee;
 import com.fyp.faaiz.ets.tabs.employee.EmployeeDetail;
 
@@ -59,6 +63,14 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         holder.title.setText(mdata.get(position).getFullName());
         holder.desc.setText(mdata.get(position).getEmail());
 
+        holder.timer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimerFragment fpl = TimerFragment.newInstance(mdata.get(position).getId() + "", mdata.get(position).getUuid());
+                fpl.show(((FragmentActivity) myContext).getSupportFragmentManager(), "FORGOTPASSWORD FRAGMENT");
+            }
+        });
+
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +81,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
                         .setCancelable(false)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                request(mdata.get(position).getId(),position);
+                                request(mdata.get(position).getId(), position);
                                 Toast.makeText(myContext, mdata.get(position).getId() + "A", Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -148,6 +160,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
         ImageView detail;
         ImageView delete;
         ImageView detail_location;
+        ImageView timer;
 
         public MVH(View itemView) {
             super(itemView);
@@ -157,19 +170,20 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.MVH> {
             this.delete = (ImageView) itemView.findViewById(R.id.delete_employee);
             this.detail = (ImageView) itemView.findViewById(R.id.detail_employee);
             this.detail_location = (ImageView) itemView.findViewById(R.id.detail_location);
+            this.timer = (ImageView) itemView.findViewById(R.id.timer_employee);
         }
     }
 
     private void request(int id, final int index) {
         final EmployeeAdapter t = this;
         String URL_SEND = "";
-        if(ApplicationState.REMOTE_DATABASE_ACTIVE){
+        if (ApplicationState.REMOTE_DATABASE_ACTIVE) {
             URL_SEND = ApplicationState.REMOTE_BASE_URL + "/employee/" + id;
-        }else{
+        } else {
             URL_SEND = ApplicationState.LOCAL_BASE_URL + "/ets/list_all_employees.php?id=" + id;
         }
 
-        Toast.makeText(myContext,URL_SEND, Toast.LENGTH_SHORT).show();
+        Toast.makeText(myContext, URL_SEND, Toast.LENGTH_SHORT).show();
         StringRequest request = new StringRequest(Request.Method.DELETE, URL_SEND, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
